@@ -1,0 +1,4 @@
+﻿  MySuper3DApp.cpp
+D:\Study\Computer Graphics\Lab1\Lab1\MySuper3DApp.cpp(229,54): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+D:\Study\Computer Graphics\Lab1\Lab1\MySuper3DApp.cpp(246,39): warning C4267: '=': conversion from 'size_t' to 'UINT', possible loss of data
+  Lab1.vcxproj -> D:\Study\Computer Graphics\Lab1\x64\Debug\Lab1.exe
