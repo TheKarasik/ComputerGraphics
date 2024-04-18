@@ -27,7 +27,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 		// If a key is pressed send it to the input object so it can record that state.
 		std::cout << "Key: " << static_cast<unsigned int>(wparam) << std::endl;
 
-		if (static_cast<unsigned int>(wparam) == 27) PostQuitMessage(0);
+		if (static_cast<unsigned int>(wparam) == 27)
+		{
+			//PostQuitMessage(0);
+		}
 		return 0;
 	}
 	default:
@@ -171,7 +174,15 @@ int main()
 
 	ID3DBlob* pixelBC;
 	ID3DBlob* errorPixelCode;
-	res = D3DCompileFromFile(L"./Shaders/MyVeryFirstShader.hlsl", Shader_Macros /*macros*/, nullptr /*include*/, "PSMain", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelBC, &errorPixelCode);
+	res = D3DCompileFromFile(L"./Shaders/MyVeryFirstShader.hlsl",
+		Shader_Macros /*macros*/,
+		nullptr /*include*/,
+		"PSMain",
+		"ps_5_0",
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+		0,
+		&pixelBC,
+		&errorPixelCode);
 
 	ID3D11VertexShader* vertexShader;
 	ID3D11PixelShader* pixelShader;
@@ -236,7 +247,7 @@ int main()
 	ID3D11Buffer* vb;
 	device->CreateBuffer(&vertexBufDesc, &vertexData, &vb);
 
-	int indeces[] = { 0,1,2, 1,0,3 };
+	int indeces[] = { 0,2,1, 1,0,3 };
 	D3D11_BUFFER_DESC indexBufDesc = {};
 	indexBufDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
@@ -285,12 +296,12 @@ int main()
 		}
 
 		// If windows signals to end the application then exit out.
-		if (msg.message == WM_QUIT) {
+		if (msg.message == WM_QUIT || GetAsyncKeyState(VK_ESCAPE)) {
 			isExitRequested = true;
 		}
 
 		context->ClearState();
-
+   
 		context->RSSetState(rastState);
 
 		D3D11_VIEWPORT viewport = {};
