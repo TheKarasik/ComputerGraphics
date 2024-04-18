@@ -4,7 +4,7 @@ TriangleColor::TriangleColor(float* Hues)
 {
     for (int i = 0; i < 3; i++)
     {
-        ColorData[i] = HSV2RGB(Hues[i]);
+        ColorData_[i] = HSV2RGB(Hues[i]);
     }
 }
 

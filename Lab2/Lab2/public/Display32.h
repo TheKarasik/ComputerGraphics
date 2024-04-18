@@ -1,9 +1,9 @@
 ﻿#pragma once
-#include "minwindef.h"
-#include <winuser.h>
+//#include "minwindef.h"
+//#include <winuser.h>
 #include <iostream>
-#include "windef.h"
-#include <wingdi.h>
+#include "windows.h"
+//#include <wingdi.h>
 
 class Display32
 {

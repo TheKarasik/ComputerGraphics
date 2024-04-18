@@ -4,13 +4,14 @@
 
 #include "Delegates.h"
 #include "Keys.h"
-#include "SimpleMath.h"
+//#include "SimpleMath.h"
+#include "../../packages/directxtk_uwp.2024.2.22.1/include/SimpleMath.h"
 //#include "Exports.h"
 
 
 class Game;
 
-class GAMEFRAMEWORK_API InputDevice
+class /*GAMEFRAMEWORK_API*/ InputDevice
 {
 	friend class Game;
 	

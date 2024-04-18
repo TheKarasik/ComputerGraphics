@@ -15,6 +15,7 @@ void GoldenRectangleComponent::ProcessGoldenRatio()
 {
     DirectX::XMFLOAT4 Points[3];
     float Hues[3];
+    
     Points[0] = DirectX::XMFLOAT4(XLineSegment.BeginPoint, YLineSegment.BeginPoint, 0.5, 1.0);
     Hues[0] = CurrentHue;
     CurrentHue += HueStep;
@@ -32,12 +33,32 @@ void GoldenRectangleComponent::ProcessGoldenRatio()
     }
     Hues[1] = CurrentHue;
     Hues[2] = CurrentHue;
+    
     TriangleGeometry TGeometry = TriangleGeometry(Points);
     TriangleColor TColor = TriangleColor(Hues);
-    Triangles.push_back(TriangleComponent(game_, TGeometry, TColor));
+    
+    Triangles.push_back(TriangleComponent(game_, TGeometry, TColor, HueStep));
+    
     if (IsXAxisBeingCut) ShiftLineSegment(&XLineSegment);
     else ShiftLineSegment(&YLineSegment);
+    
     IsXAxisBeingCut = !IsXAxisBeingCut;
+}
+
+void GoldenRectangleComponent::Update(float t)
+{
+    for (int i = 0; i < Triangles.size(); ++i)
+    {
+        Triangles[i].Update(t + i*HueStep);
+    }
+}
+
+void GoldenRectangleComponent::Draw()
+{
+    for (int i = 0; i < Triangles.size(); ++i)
+    {
+        Triangles[i].Draw();
+    }
 }
 
 void GoldenRectangleComponent::ShiftLineSegment(LineSegment* LSegment)
