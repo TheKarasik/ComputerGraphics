@@ -1,4 +1,6 @@
-﻿#include "../public/TriangleColor.h"
+﻿#include "TriangleColor.h"
+
+#include <cstdio>
 
 TriangleColor::TriangleColor(float Hues[3])
 {
@@ -10,6 +12,7 @@ TriangleColor::TriangleColor(float Hues[3])
 
 DirectX::XMFLOAT4 TriangleColor::HSV2RGB(float Hue)
 {
+    //printf("hue: %f\n", Hue);
     float Saturation = 1.0;
     float Value = 1.0;
     float C = Value * Saturation;

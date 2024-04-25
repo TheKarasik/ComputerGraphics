@@ -1,7 +1,7 @@
 //#include "pch.h"
-#include "../public/InputDevice.h"
+#include "InputDevice.h"
 #include <iostream>
-#include "../public/Game.h"
+#include "Game.h"
 
 
 using namespace DirectX::SimpleMath;

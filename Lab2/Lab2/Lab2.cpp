@@ -1,5 +1,5 @@
 
-#include "public/Game.h"
+#include "Game.h"
 
 int main(int argc, char* argv[])
 {

@@ -1,4 +1,4 @@
-﻿#include "../public/Display32.h"
+﻿#include "Display32.h"
 
 
 

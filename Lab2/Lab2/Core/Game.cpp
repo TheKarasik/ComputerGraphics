@@ -1,4 +1,4 @@
-﻿#include "../public/Game.h"
+﻿#include "Game.h"
 
 void Game::Initialize()
 {
@@ -11,12 +11,29 @@ void Game::Initialize()
 
     LineSegment XLineSegment = LineSegment(-1, 1);
     LineSegment YLineSegment = LineSegment(1, -1);
+    
+    DirectX::XMFLOAT4 Points[3];
+    float Hues[3];
+    Hues[0] = 0.0;
+    Hues[1] = 0.0;
+    Hues[2] = 0.0;
+
+    Points[0] = DirectX::XMFLOAT4(-0.5, -0.5, 0.5, 1.0);
+    Points[1] = DirectX::XMFLOAT4(0.5, -0.5, 0.5, 1.0);
+    Points[2] = DirectX::XMFLOAT4(0.0, 1.0, 0.5, 1.0);
+
+    TriangleGeometry TGeometry = TriangleGeometry(Points);
+    TriangleColor TColor = TriangleColor(Hues);
+    
     GRectangle = new GoldenRectangleComponent(this, XLineSegment, YLineSegment, true, depth);
+    
+    Triangle = new TriangleComponent(this, TGeometry, TColor, 360);
 }
 
 void Game::GameLoop()
 {
-    std::chrono::time_point<std::chrono::steady_clock> previous = std::chrono::steady_clock::now();
+    start = std::chrono::steady_clock::now();
+    std::chrono::time_point<std::chrono::steady_clock> previous = start;
     lag = 0.0f;
     while (true)
     {
@@ -29,14 +46,18 @@ void Game::GameLoop()
         ProcessInput();
         if (IsEscapePressed) return;
 
-        while (lag >= MS_PER_UPDATE/1000)
+        while (lag >= S_PER_UPDATE)
         {
             //printf("lag: %f\n", lag);
             Update();
-            lag -= MS_PER_UPDATE/1000;
+            lag -= S_PER_UPDATE;
         }
         Render();
     }
+    delete Display_;
+    delete Input_;
+    delete GRectangle;
+    delete Triangle;
 }
 
 void Game::SetUpRender()
@@ -182,10 +203,11 @@ void Game::Render()
 
     context_->OMSetRenderTargets(1, &rtv, nullptr);
 
-    float color[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    float color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     context_->ClearRenderTargetView(rtv, color);
 
     GRectangle->Draw();
+    Triangle->Draw();
 
     context_->OMSetRenderTargets(0, nullptr, nullptr);
 
@@ -194,7 +216,9 @@ void Game::Render()
 
 void Game::Update()
 {
-    GRectangle->Update(lag/MS_PER_UPDATE*360);
+    std::chrono::time_point<std::chrono::steady_clock> current = std::chrono::steady_clock::now();
+    float t = std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.0f ;
+    GRectangle->Update(t*0.1f);
 }
 
 void Game::ProcessInput()

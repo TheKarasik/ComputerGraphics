@@ -1,4 +1,4 @@
-﻿#include "../public/TriangleComponent.h"
+﻿#include "TriangleComponent.h"
 
 TriangleComponent::TriangleComponent(Game* game, TriangleGeometry Locations, TriangleColor Colors, float HueStep) :
     GameComponent(game),
@@ -13,9 +13,9 @@ TriangleComponent::TriangleComponent(Game* game, TriangleGeometry Locations, Tri
 
 void TriangleComponent::Update(float h)
 {
-    float Hues[3] = {h, h+HueStep, h+HueStep};
+    float Hues[3] = {RoundHue(h), RoundHue(h+HueStep), RoundHue(h+HueStep)};
     Colors = TriangleColor(Hues);
-    
+    //printf("h: %f, s: %f, v: %f\n", Colors.ColorData()[0], Colors.ColorData()[1], Colors.ColorData()[2]);
 }
 
 void TriangleComponent::Draw()
@@ -33,7 +33,7 @@ void TriangleComponent::GenerateVB()
         Locations.GeometryData()[1], Colors.ColorData()[1],
         Locations.GeometryData()[2], Colors.ColorData()[2],
     };
-
+    // printf("h: %f, s: %f, v: %f\n", Colors.ColorData()[0], Colors.ColorData()[1], Colors.ColorData()[2]);
     /*DirectX::XMFLOAT4 vertieces[8] = {
         DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
         DirectX::XMFLOAT4(-0.5f, -0.5f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),

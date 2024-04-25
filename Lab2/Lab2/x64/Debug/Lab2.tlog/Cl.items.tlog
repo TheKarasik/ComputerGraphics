@@ -1,12 +1,12 @@
-D:\Study\Computer Graphics\Lab2\Lab2\Lab2.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\Lab2.obj
-D:\Study\Computer Graphics\Lab2\Lab2\private\Delegates.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\Delegates.obj
-D:\Study\Computer Graphics\Lab2\Lab2\private\Display32.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\Display32.obj
-D:\Study\Computer Graphics\Lab2\Lab2\private\Game.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\Game.obj
-D:\Study\Computer Graphics\Lab2\Lab2\private\GameComponent.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\GameComponent.obj
-D:\Study\Computer Graphics\Lab2\Lab2\private\GoldenRectangleComponent.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\GoldenRectangleComponent.obj
-D:\Study\Computer Graphics\Lab2\Lab2\private\InputDevice.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\InputDevice.obj
-D:\Study\Computer Graphics\Lab2\Lab2\private\LineSegment.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\LineSegment.obj
-D:\Study\Computer Graphics\Lab2\Lab2\private\MyVeryFirstShaderClass.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\MyVeryFirstShaderClass.obj
-D:\Study\Computer Graphics\Lab2\Lab2\private\TriangleColor.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\TriangleColor.obj
-D:\Study\Computer Graphics\Lab2\Lab2\private\TriangleComponent.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\TriangleComponent.obj
-D:\Study\Computer Graphics\Lab2\Lab2\private\TriangleGeometry.cpp;D:\Study\Computer Graphics\Lab2\Lab2\x64\Debug\TriangleGeometry.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\Color\TriangleColor.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\TriangleColor.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\Components\GameComponent.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\GameComponent.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\Components\GoldenRectangleComponent.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\GoldenRectangleComponent.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\Components\TriangleComponent.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\TriangleComponent.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\Core\Game.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\Game.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\Display\Display32.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\Display32.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\Geometry\LineSegment.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\LineSegment.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\Geometry\TriangleGeometry.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\TriangleGeometry.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\Input\InputDevice.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\InputDevice.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\Lab2.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\Lab2.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\ShaderClasses\MyVeryFirstShaderClass.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\MyVeryFirstShaderClass.obj
+D:\Study\ComputerGraphics\Lab2\Lab2\Utils\Delegates.cpp;D:\Study\ComputerGraphics\Lab2\Lab2\x64\Debug\Delegates.obj

@@ -15,7 +15,7 @@
 
 #define GOLDEN_RATIO 1.618
 
-#define MS_PER_UPDATE 16.0
+#define S_PER_UPDATE 0.016
 
 class TriangleComponent;
 class GoldenRectangleComponent;
@@ -28,6 +28,7 @@ public:
     InputDevice* Input() {return Input_;}
     Display32* Display() {return Display_;}
     ID3D11DeviceContext* Context() {return context_;}
+    TriangleComponent* Triangle;
     void GameLoop();
 private:
     void SetUpRender();
@@ -39,6 +40,7 @@ private:
     InputDevice* Input_;
     Display32* Display_;
     //std::vector<TriangleComponent*> triangles;
+    std::chrono::time_point<std::chrono::steady_clock> start;
     bool IsEscapePressed = false;
     GoldenRectangleComponent* GRectangle;
     float lag;

@@ -1,6 +1,6 @@
-﻿#include "../public/TriangleGeometry.h"
+﻿#include "TriangleGeometry.h"
 
-#include "../public/Delegates.h"
+#include "Delegates.h"
 
 TriangleGeometry::TriangleGeometry(DirectX::XMFLOAT4 GeometryData[3])
 {

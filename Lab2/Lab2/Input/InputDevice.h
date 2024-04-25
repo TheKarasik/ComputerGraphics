@@ -4,8 +4,8 @@
 
 #include "Delegates.h"
 #include "Keys.h"
-#include "SimpleMath.h"
-//#include "../../packages/directxtk_uwp.2024.2.22.1/include/SimpleMath.h"
+//#include "SimpleMath.h"
+#include "../../packages/directxtk_uwp.2024.2.22.1/include/SimpleMath.h"
 //#include "Exports.h"
 
 

@@ -1,4 +1,4 @@
-﻿#include "../public/MyVeryFirstShaderClass.h"
+﻿#include "MyVeryFirstShaderClass.h"
 
 MyVeryFirstShaderClass::MyVeryFirstShaderClass(HWND hWnd, Microsoft::WRL::ComPtr<ID3D11Device> device)
 {

@@ -23,4 +23,5 @@ private:
     ID3D11Buffer* ib_;
     UINT strides;
     UINT offsets;
+    float RoundHue(float hue) {return fmod(hue, 360.0f); }
 };

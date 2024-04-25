@@ -1,4 +1,4 @@
-﻿#include "../public/GoldenRectangleComponent.h"
+﻿#include "GoldenRectangleComponent.h"
 
 
 
@@ -48,9 +48,12 @@ void GoldenRectangleComponent::ProcessGoldenRatio()
 
 void GoldenRectangleComponent::Update(float t)
 {
+    t = t - (long)t;
+    //t = modf(t, nullptr);
     for (int i = 0; i < Triangles.size(); ++i)
     {
-        Triangles[i].Update(t + i*HueStep);
+        Triangles[i].Update(t*360.0f + i*HueStep);
+        //printf("t: %f\n", t);
     }
 }
 

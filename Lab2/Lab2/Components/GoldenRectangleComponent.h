@@ -32,6 +32,7 @@ private:
     const float EndHue;
     float CurrentHue;
     float HueStep;
+    float freq = 0.001;
     uint8_t depth;
     std::vector<TriangleComponent> Triangles{};
 };

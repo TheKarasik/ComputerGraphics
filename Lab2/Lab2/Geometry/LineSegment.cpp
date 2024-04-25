@@ -1,4 +1,4 @@
-﻿#include "../public/LineSegment.h"
+﻿#include "LineSegment.h"
 
 LineSegment::LineSegment(float BeginPoint, float EndPoint) :
     BeginPoint(BeginPoint),
