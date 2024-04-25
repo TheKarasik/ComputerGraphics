@@ -16,19 +16,20 @@ void GoldenRectangleComponent::ProcessGoldenRatio()
     DirectX::XMFLOAT4 Points[3];
     float Hues[3];
     
-    Points[0] = DirectX::XMFLOAT4(XLineSegment.BeginPoint, YLineSegment.BeginPoint, 0.5, 1.0);
     Hues[0] = CurrentHue;
     CurrentHue += HueStep;
     if (IsXAxisBeingCut)
     {
-        Points[1] = DirectX::XMFLOAT4(XLineSegment.GoldenRatioPoint(), YLineSegment.EndPoint, 0.5, 1.0);
-        if (AreOutTrianglesProcessed) Points[2] = DirectX::XMFLOAT4(XLineSegment.BeginPoint, YLineSegment.EndPoint, 0.5, 1.0);
-        else Points[2] = DirectX::XMFLOAT4(XLineSegment.GoldenRatioPoint(), YLineSegment.BeginPoint, 0.5, 1.0);
+        Points[0] = DirectX::XMFLOAT4(XLineSegment.BeginPoint, YLineSegment.EndPoint, 0.5, 1.0);
+        Points[1] = DirectX::XMFLOAT4(XLineSegment.GoldenRatioPoint(), YLineSegment.BeginPoint, 0.5, 1.0);
+        if (AreOutTrianglesProcessed) Points[2] = DirectX::XMFLOAT4(XLineSegment.BeginPoint, YLineSegment.BeginPoint, 0.5, 1.0);
+        else Points[2] = DirectX::XMFLOAT4(XLineSegment.GoldenRatioPoint(), YLineSegment.EndPoint, 0.5, 1.0);
     }
     else
     {
-        Points[1] = DirectX::XMFLOAT4(XLineSegment.EndPoint, YLineSegment.GoldenRatioPoint(), 0.5, 1.0);
-        if (AreOutTrianglesProcessed) Points[2] = DirectX::XMFLOAT4(XLineSegment.EndPoint, YLineSegment.BeginPoint, 0.5, 1.0);
+        Points[0] = DirectX::XMFLOAT4(XLineSegment.EndPoint, YLineSegment.BeginPoint, 0.5, 1.0);
+        Points[1] = DirectX::XMFLOAT4(XLineSegment.BeginPoint, YLineSegment.GoldenRatioPoint(), 0.5, 1.0);
+        if (AreOutTrianglesProcessed) Points[2] = DirectX::XMFLOAT4(XLineSegment.BeginPoint, YLineSegment.BeginPoint, 0.5, 1.0);
         else Points[2] = DirectX::XMFLOAT4(XLineSegment.EndPoint, YLineSegment.GoldenRatioPoint(), 0.5, 1.0);
     }
     Hues[1] = CurrentHue;
@@ -42,7 +43,7 @@ void GoldenRectangleComponent::ProcessGoldenRatio()
     if (IsXAxisBeingCut) ShiftLineSegment(&XLineSegment);
     else ShiftLineSegment(&YLineSegment);
     
-    IsXAxisBeingCut = !IsXAxisBeingCut;
+    
 }
 
 void GoldenRectangleComponent::Update(float t)
@@ -66,4 +67,5 @@ void GoldenRectangleComponent::ShiftLineSegment(LineSegment* LSegment)
     LSegment->BeginPoint = LSegment->EndPoint;
     LSegment->EndPoint = LSegment->GoldenRatioPoint();
     LSegment->CalculateGoldenRatioPoint();
+    IsXAxisBeingCut = !IsXAxisBeingCut;
 }

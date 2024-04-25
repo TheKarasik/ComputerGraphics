@@ -8,5 +8,5 @@ public:
     TriangleGeometry(DirectX::XMFLOAT4* GeometryData);
     DirectX::XMFLOAT4* GeometryData() {return GeometryData_;}
 private:
-    DirectX::XMFLOAT4* GeometryData_;
+    DirectX::XMFLOAT4 GeometryData_[3];
 };

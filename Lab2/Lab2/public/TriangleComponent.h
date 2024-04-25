@@ -12,7 +12,7 @@ class TriangleComponent : public GameComponent
 public:
     TriangleComponent(Game* game, TriangleGeometry Locations, TriangleColor Colors, float HueStep);
     void Update(float h);
-    virtual void Draw() override;
+    virtual void Draw() /*override*/;
 private:
     void GenerateVB();
     void GenerateIB();
@@ -21,6 +21,6 @@ private:
     TriangleColor Colors;
     ID3D11Buffer* vb_;
     ID3D11Buffer* ib_;
-    UINT strides[1] = { 24 };
-    UINT offsets[1] = { 0 };
+    UINT strides;
+    UINT offsets;
 };

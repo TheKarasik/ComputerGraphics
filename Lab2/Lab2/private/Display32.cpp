@@ -14,7 +14,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 
             if (static_cast<unsigned int>(wparam) == 27)
             {
-                //PostQuitMessage(0);
+                PostQuitMessage(0);
             }
             return 0;
         }
@@ -25,7 +25,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
     }
 }
 
-Display32::Display32(LPCWSTR applicationName, int screenWidth, int screenHeight)
+Display32::Display32(LPCWSTR applicationName, int screenWidth, int screenHeight) :
+screenWidth_(screenWidth), screenHeight_(screenHeight)
 {
     HINSTANCE hInstance = GetModuleHandle(nullptr);
     

@@ -6,7 +6,7 @@ TriangleComponent::TriangleComponent(Game* game, TriangleGeometry Locations, Tri
     Colors(Colors),
     HueStep(HueStep)
 {
-    GenerateVB();
+    //GenerateVB();
     
     GenerateIB();
 }
@@ -22,7 +22,8 @@ void TriangleComponent::Draw()
 {
     GenerateVB();
     game_->Context()->IASetIndexBuffer(ib_, DXGI_FORMAT_R32_UINT, 0);
-    game_->Context()->IASetVertexBuffers(0, 1, &vb_, strides, offsets);
+    game_->Context()->IASetVertexBuffers(0, 1, &vb_, &strides, &offsets);
+    game_->Context()->DrawIndexed(3, 0, 0);
 }
 
 void TriangleComponent::GenerateVB()
@@ -32,6 +33,15 @@ void TriangleComponent::GenerateVB()
         Locations.GeometryData()[1], Colors.ColorData()[1],
         Locations.GeometryData()[2], Colors.ColorData()[2],
     };
+
+    /*DirectX::XMFLOAT4 vertieces[8] = {
+        DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f),	DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
+        DirectX::XMFLOAT4(-0.5f, -0.5f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
+        DirectX::XMFLOAT4(0.5f, -0.5f, 0.5f, 1.0f),	DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f),
+    };*/
+    
+    strides = sizeof(vertieces) / std::size(vertieces) * 2;
+    offsets = 0;
     
     D3D11_BUFFER_DESC vertexBufDesc = {};
     vertexBufDesc.Usage = D3D11_USAGE_DEFAULT;

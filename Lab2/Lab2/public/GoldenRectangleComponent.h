@@ -12,6 +12,7 @@
 
 class TriangleColor;
 class TriangleGeometry;
+class TriangleComponent;
 
 class GoldenRectangleComponent : public GameComponent
 {
@@ -20,9 +21,9 @@ public:
         bool AreOutTrianglesReturned, uint8_t depth);
     void ProcessGoldenRatio();
     virtual void Update(float t);
-    virtual void Draw() override;
+    virtual void Draw() /*override*/;
 private:
-    static void ShiftLineSegment(LineSegment* LSegment);
+    void ShiftLineSegment(LineSegment* LSegment);
     bool IsXAxisBeingCut;
     bool AreOutTrianglesProcessed;
     LineSegment XLineSegment;

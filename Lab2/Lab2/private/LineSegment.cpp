@@ -7,5 +7,5 @@ LineSegment::LineSegment(float BeginPoint, float EndPoint) :
 void LineSegment::CalculateGoldenRatioPoint()
 {
     if (BeginPoint < EndPoint) GoldenRatioPoint_ = BeginPoint + (EndPoint - BeginPoint)/GOLDEN_RATIO;
-    else GoldenRatioPoint_ = EndPoint - (EndPoint - BeginPoint)/GOLDEN_RATIO;
+    else GoldenRatioPoint_ = BeginPoint + (EndPoint - BeginPoint)/GOLDEN_RATIO;
 }

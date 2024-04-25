@@ -2,12 +2,12 @@
 
 void Game::Initialize()
 {
-    Input_ = new InputDevice(this);
     Display_ = new Display32(L"Lab 2", 800*GOLDEN_RATIO, 800);
+    Input_ = new InputDevice(this);
 
     SetUpRender();
 
-    uint8_t depth = 1;
+    uint8_t depth = 15;
 
     LineSegment XLineSegment = LineSegment(-1, 1);
     LineSegment YLineSegment = LineSegment(1, -1);
@@ -21,17 +21,19 @@ void Game::GameLoop()
     while (true)
     {
         std::chrono::time_point<std::chrono::steady_clock> current = std::chrono::steady_clock::now();
-        float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count() / 1000000.0f;
+        float elapsed = std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count() / 1000000.0f ;
+        //printf("elapsed: %f\n", elapsed);
         previous = current;
         lag += elapsed;
         
         ProcessInput();
         if (IsEscapePressed) return;
 
-        while (lag >= MS_PER_UPDATE)
+        while (lag >= MS_PER_UPDATE/1000)
         {
+            //printf("lag: %f\n", lag);
             Update();
-            lag -= MS_PER_UPDATE;
+            lag -= MS_PER_UPDATE/1000;
         }
         Render();
     }
@@ -174,17 +176,16 @@ void Game::Render()
 
     context_->IASetInputLayout(layout);
     context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    GRectangle->Draw();
+    
     context_->VSSetShader(vertexShader, nullptr, 0);
     context_->PSSetShader(pixelShader, nullptr, 0);
 
     context_->OMSetRenderTargets(1, &rtv, nullptr);
 
-    float color[] = { lag, 0.1f, 0.1f, 1.0f };
+    float color[] = { 0.5f, 0.5f, 0.5f, 1.0f };
     context_->ClearRenderTargetView(rtv, color);
 
-    context_->DrawIndexed(6, 0, 0);
+    GRectangle->Draw();
 
     context_->OMSetRenderTargets(0, nullptr, nullptr);
 
@@ -198,5 +199,10 @@ void Game::Update()
 
 void Game::ProcessInput()
 {
-    if (Input_->IsKeyDown(Keys::Escape)) IsEscapePressed = true;
+    
+    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+    if (Input_->IsKeyDown(Keys::Escape) || msg.message == WM_QUIT) IsEscapePressed = true;
 }
