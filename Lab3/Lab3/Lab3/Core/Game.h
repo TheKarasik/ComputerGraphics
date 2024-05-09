@@ -7,47 +7,40 @@
 #include <wrl.h>
 #include <chrono>
 #include "Keys.h"
+#include "Renderer.h"
+#include "Platform.h"
 
 #pragma comment(lib, "d3d11.lib")
 //#pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 //#pragma comment(lib, "dxguid.lib")
 
-#define GOLDEN_RATIO 1.618
-
 #define S_PER_UPDATE 0.016
 
-class TriangleComponent;
-class GoldenRectangleComponent;
+//class TriangleComponent;
+//class GoldenRectangleComponent;
+
+class Platform;
 
 class Game
 {
 public:
-    void Initialize();
-    Microsoft::WRL::ComPtr<ID3D11Device> device() {return device_;}
-    InputDevice* Input() {return Input_;}
-    Display32* Display() {return Display_;}
-    ID3D11DeviceContext* Context() {return context_;}
+    Game();
+    InputDevice* Input() {return input_;}
+    Display32* Display() {return display_;}
     void GameLoop();
 private:
-    void SetUpRender();
     void Render();
     void Update();
     void ProcessInput();
-    Microsoft::WRL::ComPtr<ID3D11Device> device_ = nullptr;
-    ID3D11DeviceContext* context_ = nullptr;
-    InputDevice* Input_;
-    Display32* Display_;
-    //std::vector<TriangleComponent*> triangles;
+    Renderer* renderer_;
+    Platform* platform;
+    InputDevice* input_;
+    Display32* display_;
+    std::vector<GameComponent*> game_objects;
     std::chrono::time_point<std::chrono::steady_clock> start;
     bool IsEscapePressed = false;
-    GoldenRectangleComponent* GRectangle;
+    //GoldenRectangleComponent* GRectangle;
     float lag;
-    ID3D11RasterizerState* rastState;
-    ID3D11InputLayout* layout;
-    ID3D11VertexShader* vertexShader;
-    ID3D11PixelShader* pixelShader;
-    IDXGISwapChain* swapChain = nullptr;
-    ID3D11RenderTargetView* rtv;
     MSG msg = {};
 };

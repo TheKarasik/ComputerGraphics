@@ -207,7 +207,7 @@ void Game::Render()
     context_->ClearRenderTargetView(rtv, color);
 
     GRectangle->Draw();
-    Triangle->Draw();
+    //Triangle->Draw();
 
     context_->OMSetRenderTargets(0, nullptr, nullptr);
 
