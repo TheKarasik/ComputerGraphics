@@ -1,7 +1,7 @@
 #pragma once
 #include <d3d11.h>
 
-#include "SimpleMath.h"
+#include "../../packages/directxtk_uwp.2024.2.22.1/include/SimpleMath.h"
 class Renderer;
 
 

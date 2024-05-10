@@ -5,7 +5,7 @@
 
 Game::Game()
 {
-    display_ = new Display32(L"Lab 2", 800, 800);
+    display_ = new Display32(L"Lab 3", 800, 800);
     input_ = new InputDevice(this);
 
     renderer_ = new Renderer(*display_);
@@ -52,7 +52,7 @@ void Game::Update()
     float t = std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.0f ;
     GRectangle->Update(t*0.1f);
     */
-    
+    //platform->update(0);
 }
 
 void Game::ProcessInput()

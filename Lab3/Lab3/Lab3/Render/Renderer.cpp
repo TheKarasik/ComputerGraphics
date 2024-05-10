@@ -77,8 +77,8 @@ Renderer::Renderer(Display32& Display) : Display_(Display)
             0}
     };
     
-    Shader* pixel_shader = new PixelShader(*this);
-    Shader* vertex_shader = new VertexShader(*this);
+    pixel_shader = new PixelShader(*this);
+    vertex_shader = new VertexShader(*this);
 
     
     
@@ -117,8 +117,8 @@ void Renderer::Render(std::vector<GameComponent*> visual_objects)
     context_->IASetInputLayout(layout);
     context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     
-    context_->VSSetShader(vertexShader, nullptr, 0);
-    context_->PSSetShader(pixelShader, nullptr, 0);
+    context_->VSSetShader(vertex_shader->vertex_shader(), nullptr, 0);
+    context_->PSSetShader(pixel_shader->pixel_shader(), nullptr, 0);
 
     context_->OMSetRenderTargets(1, &rtv, nullptr);
 
@@ -130,7 +130,8 @@ void Renderer::Render(std::vector<GameComponent*> visual_objects)
         (*vo).draw();
     }
 
+    //ID3D11RenderTargetView* nullViews [] = { nullptr };
+    //context_->OMSetRenderTargets(1, nullViews, 0);
     context_->OMSetRenderTargets(0, nullptr, nullptr);
-
     swapChain->Present(1, /*DXGI_PRESENT_DO_NOT_WAIT*/ 0);
 }

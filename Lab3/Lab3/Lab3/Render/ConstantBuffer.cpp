@@ -14,7 +14,7 @@ ConstantBuffer::ConstantBuffer(Renderer* renderer, unsigned int sizeof_structure
     buffer_type_ = D3D11_BIND_CONSTANT_BUFFER;
     CPU_acess_flag_ = D3D11_CPU_ACCESS_WRITE;
     raw_data_ = nullptr;
-    bytewidth_ = sizeof_structure;
+    bytewidth_ = static_cast<UINT>(sizeof_structure + (16 - (sizeof_structure % 16)));
     
     CreateBuffer();
     renderer_->device()->CreateBuffer
@@ -25,7 +25,7 @@ void ConstantBuffer::UpdateBuffer(void* raw_data)
 {
     renderer_->Context()->Map(buffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &res);
     //auto dataPtr = static_cast<T*>(res.pData);
-    memcpy(res.pData, &raw_data, bytewidth_);
+    CopyMemory(res.pData, &raw_data, bytewidth_);
     renderer_->Context()->Unmap(buffer_, 0);
 }
 

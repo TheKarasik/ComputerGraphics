@@ -1,16 +1,16 @@
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Core\Game.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\Game.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Core\GameComponent.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\GameComponent.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Display\Display32.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\Display32.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\GameObjects\Platform.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\Platform.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\GameObjects\Triangle.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\Triangle.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Input\InputDevice.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\InputDevice.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Lab3.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\Lab3.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Render\AbstractBuffer.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\AbstractBuffer.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Render\ConstantBuffer.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\ConstantBuffer.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Render\IndexBuffer.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\IndexBuffer.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Render\PixelShader.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\PixelShader.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Render\Renderer.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\Renderer.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Render\Shader.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\Shader.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Render\VertexBuffer.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\VertexBuffer.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Render\VertexShader.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\VertexShader.obj
-D:\Study\Computer Graphics\Lab3\Lab3\Lab3\Utils\Delegates.cpp;D:\Study\Computer Graphics\Lab3\Lab3\Lab3\x64\Debug\Delegates.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Core\Game.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\Game.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Core\GameComponent.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\GameComponent.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Display\Display32.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\Display32.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\GameObjects\Platform.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\Platform.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\GameObjects\Triangle.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\Triangle.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Input\InputDevice.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\InputDevice.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Lab3.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\Lab3.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Render\AbstractBuffer.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\AbstractBuffer.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Render\ConstantBuffer.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\ConstantBuffer.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Render\IndexBuffer.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\IndexBuffer.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Render\PixelShader.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\PixelShader.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Render\Renderer.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\Renderer.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Render\Shader.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\Shader.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Render\VertexBuffer.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\VertexBuffer.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Render\VertexShader.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\VertexShader.obj
+D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\Utils\Delegates.cpp;D:\Study\ComputerGraphics\Lab3\Lab3\Lab3\x64\Debug\Delegates.obj

@@ -14,7 +14,8 @@ class Display32;
 //template <typename T>
 //class AbstractBuffer<T>;
 
-
+class VertexShader;
+class PixelShader;
 
 struct ConstantDataVertexShader;
 class GameComponent;
@@ -33,8 +34,8 @@ private:
     Display32& Display_;
     IDXGISwapChain* swapChain;
     ID3D11RenderTargetView* rtv;
-    ID3D11VertexShader* vertexShader;
-    ID3D11PixelShader* pixelShader;
+    VertexShader* vertex_shader;
+    PixelShader* pixel_shader;
     ID3D11InputLayout* layout;
     ID3D11RasterizerState* rastState;
     

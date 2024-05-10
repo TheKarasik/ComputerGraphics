@@ -29,5 +29,18 @@ private:
     float y_pos_ = 0;
     ConstantBuffer* constant_buffer_;
     ConstantDataVertexShader data_;
-    Triangle triangles_[2];
+    Triangle triangles_[2] = {Triangle(renderer_, TriangleGeometry{
+    TriangleVertex{DirectX::XMFLOAT4(0.5, 0.5, 0.5, 1.0),
+    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+    TriangleVertex{DirectX::XMFLOAT4(0.5, -0.5, 0.5, 1.0),
+    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+    TriangleVertex{DirectX::XMFLOAT4(-0.5, -0.5, 0.5, 1.0),
+    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)}}),
+    Triangle(renderer_, TriangleGeometry{
+    TriangleVertex{DirectX::XMFLOAT4(-0.5, -0.5, 0.5, 1.0),
+    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+    TriangleVertex{DirectX::XMFLOAT4(0.5, 0.5, 0.5, 1.0),
+    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
+    TriangleVertex{DirectX::XMFLOAT4(-0.5, 0.5, 0.5, 1.0),
+    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)}})};
 };
