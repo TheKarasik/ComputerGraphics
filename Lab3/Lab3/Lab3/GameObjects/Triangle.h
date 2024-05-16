@@ -1,13 +1,14 @@
 #pragma once
-#include "GameComponent.h"
+#include "Drawable.h"
 #include "Structs.h"
 #include "AbstractBuffer.h"
 
-class Triangle : public GameComponent
+class Triangle : public Drawable
 {
 public:
-    Triangle(Renderer& renderer);
-    Triangle(Renderer& renderer, TriangleGeometry triangle);
+    Triangle(Renderer* renderer);
+    Triangle(Renderer* renderer, TriangleGeometry triangle);
+    ~Triangle();
     Triangle& operator=(const Triangle& triangle);
     void draw() override;
     void update(TriangleGeometry* raw_data);

@@ -16,7 +16,7 @@ void Shader::CompileShader()
     }*/
     
     if (!(entry_point_ && target_)) return;
-    HRESULT res = D3DCompileFromFile(file_name_,
+    D3DCompileFromFile(file_name_,
         shader_macro_ /*macros*/,
         nullptr /*include*/,
         entry_point_,

@@ -6,9 +6,11 @@
 #include <d3dcompiler.h>
 #include <wrl.h>
 #include <chrono>
+
+#include "Controllable.h"
 #include "Keys.h"
 #include "Renderer.h"
-#include "Platform.h"
+#include "RectangleObject.h"
 
 #pragma comment(lib, "d3d11.lib")
 //#pragma comment(lib, "dxgi.lib")
@@ -20,7 +22,7 @@
 //class TriangleComponent;
 //class GoldenRectangleComponent;
 
-class Platform;
+class RectangleObject;
 
 class Game
 {
@@ -30,17 +32,21 @@ public:
     Display32* Display() {return display_;}
     void GameLoop();
 private:
+    bool single_player = false;
     void Render();
     void Update();
     void ProcessInput();
+    void CleanUp();
     Renderer* renderer_;
-    Platform* platform;
+    RectangleObject* ball;
+    RectangleObject* left_platform;
+    RectangleObject* right_platform;
     InputDevice* input_;
     Display32* display_;
-    std::vector<GameComponent*> game_objects;
     std::chrono::time_point<std::chrono::steady_clock> start;
     bool IsEscapePressed = false;
     //GoldenRectangleComponent* GRectangle;
     float lag;
+    float elapsed;
     MSG msg = {};
 };

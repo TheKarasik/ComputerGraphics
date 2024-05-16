@@ -1,46 +1,21 @@
-#pragma once
-#include "ConstantBuffer.h"
-#include "GameComponent.h"
-#include "Structs.h"
-#include "Triangle.h"
+﻿#pragma once
+#include "RectangleObject.h"
+#include "Controllable.h"
+#include "InputDevice.h"
 
-//
-/*template <typename T>
-class ConstantBuffer<T>;
-template <typename T>
-class AbstractBuffer<T>;*/
-//class TriangleGeometry;
-//class Triangle;
+class Ball;
 
-
-
-class Platform : public GameComponent
+class Platform : public RectangleObject
 {
 public:
-    Platform(Renderer& renderer, float x_pos = -0.8, float height = 0.2);
-    void GenerateContextBufferData();
-    void update(float* y_pos);
-    void draw() override;
-    //AbstractBuffer<ConstantDataVertexShader>* constant_buffer() {return constant_buffer_;}
+    Platform(Renderer* renderer, bool player_controlled, Ball* ball, RectangleGeometry rect =
+        RectangleGeometry{DirectX::XMFLOAT2(-0.8, 0), DirectX::XMFLOAT2(0.05, 0.1)});
+    void MoveUp();
+    void MoveDown();
+    void update(float elapsed) override;
+    Controllable* GetController() {return controller;}
 private:
-    float x_pos_;
-    float height_;
-    float width_ = 0.05;
-    float y_pos_ = 0;
-    ConstantBuffer* constant_buffer_;
-    ConstantDataVertexShader data_;
-    Triangle triangles_[2] = {Triangle(renderer_, TriangleGeometry{
-    TriangleVertex{DirectX::XMFLOAT4(0.5, 0.5, 0.5, 1.0),
-    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
-    TriangleVertex{DirectX::XMFLOAT4(0.5, -0.5, 0.5, 1.0),
-    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
-    TriangleVertex{DirectX::XMFLOAT4(-0.5, -0.5, 0.5, 1.0),
-    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)}}),
-    Triangle(renderer_, TriangleGeometry{
-    TriangleVertex{DirectX::XMFLOAT4(-0.5, -0.5, 0.5, 1.0),
-    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
-    TriangleVertex{DirectX::XMFLOAT4(0.5, 0.5, 0.5, 1.0),
-    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)},
-    TriangleVertex{DirectX::XMFLOAT4(-0.5, 0.5, 0.5, 1.0),
-    DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)}})};
+    float step = 0.005;
+    Controllable* controller;
+    Ball* ball_;
 };

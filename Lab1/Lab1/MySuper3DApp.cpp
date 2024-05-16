@@ -105,7 +105,7 @@ int main()
 	swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapDesc.OutputWindow = hWnd; 
+	swapDesc.OutputWindow = hWnd;
 	swapDesc.Windowed = true;
 	swapDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
@@ -121,7 +121,7 @@ int main()
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		D3D11_CREATE_DEVICE_DEBUG,	//D3D11_CREATE_DEVICE_BGRA_SUPPORT,
+		D3D11_CREATE_DEVICE_DEBUG,
 		featureLevel,
 		1,
 		D3D11_SDK_VERSION,
@@ -135,21 +135,6 @@ int main()
 	{
 		// Well, that was unexpected
 	}
-
-	Microsoft::WRL::ComPtr<ID3D11Debug> debug = nullptr;
-
-	if (FAILED(device.As(&debug)))
-	{
-		std::cout << "D3D11: Failed to get the debug layer from the device\n";
-		return false;
-	}
-
-	
-//#if !defined(NDEBUG)
-	//debug->ReportLiveDeviceObjects(D3D11_RLDO_FLAGS::D3D11_RLDO_DETAIL);
-	//debug.Reset();
-//#endif
-	//device.Reset();
 
 	ID3D11Texture2D* backTex;
 	ID3D11RenderTargetView* rtv;

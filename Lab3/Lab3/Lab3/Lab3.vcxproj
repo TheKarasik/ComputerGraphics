@@ -156,9 +156,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\Game.cpp" />
-    <ClCompile Include="Core\GameComponent.cpp" />
     <ClCompile Include="Display\Display32.cpp" />
-    <ClCompile Include="GameObjects\Platform.cpp">
+    <ClCompile Include="GameObjects\Ball.cpp" />
+    <ClCompile Include="GameObjects\RectangleObject.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -233,6 +233,7 @@
       <LinkCompiled>true</LinkCompiled>
       <AdditionalIncludeDirectories>D:\Study\Computer Graphics\Lab3\Lab3\packages\directxtk_uwp.2024.2.22.1\build\native\..\..\include;</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="GameObjects\Platform.cpp" />
     <ClCompile Include="GameObjects\Triangle.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -308,7 +309,9 @@
       <LinkCompiled>true</LinkCompiled>
       <AdditionalIncludeDirectories>D:\Study\Computer Graphics\Lab3\Lab3\packages\directxtk_uwp.2024.2.22.1\build\native\..\..\include;</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Input\AIPlatformController.cpp" />
     <ClCompile Include="Input\InputDevice.cpp" />
+    <ClCompile Include="Input\PlayerPlatformController.cpp" />
     <ClCompile Include="Lab3.cpp" />
     <ClCompile Include="Render\AbstractBuffer.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
@@ -617,12 +620,19 @@
     <ClCompile Include="Utils\Delegates.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Core\GameComponent.h" />
+    <ClInclude Include="Core\Controllable.h" />
+    <ClInclude Include="Core\Drawable.h" />
     <ClInclude Include="Core\Game.h" />
+    <ClInclude Include="Core\Updatable.h" />
     <ClInclude Include="Display\Display32.h" />
+    <ClInclude Include="GameObjects\Ball.h" />
+    <ClInclude Include="GameObjects\RectangleObject.h" />
     <ClInclude Include="GameObjects\Platform.h" />
     <ClInclude Include="GameObjects\Triangle.h" />
+    <ClInclude Include="Input\AIPlatformController.h" />
     <ClInclude Include="Input\InputDevice.h" />
+    <ClInclude Include="Input\PlayerController.h" />
+    <ClInclude Include="Input\PlayerPlatformController.h" />
     <ClInclude Include="Render\AbstractBuffer.h" />
     <ClInclude Include="Render\ConstantBuffer.h" />
     <ClInclude Include="Render\IndexBuffer.h" />

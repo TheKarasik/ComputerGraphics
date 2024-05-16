@@ -2,13 +2,16 @@
 #include "InputDevice.h"
 #include <iostream>
 #include "Game.h"
-
+#include "Delegates.h"
 
 using namespace DirectX::SimpleMath;
 
+//Delegate<int, float> InputDevice::del;
+InputDevice* InputDevice::singleton = nullptr;
 
 InputDevice::InputDevice(Game* inGame) : game(inGame)
 {
+	if (singleton) return;
 	keys = new std::unordered_set<Keys>();
 	
 	RAWINPUTDEVICE Rid[2];
@@ -28,6 +31,7 @@ InputDevice::InputDevice(Game* inGame) : game(inGame)
 		auto errorCode = GetLastError();
 		std::cout << "ERROR: " << errorCode << std::endl;
 	}
+	singleton = this;
 }
 
 InputDevice::~InputDevice()

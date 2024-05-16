@@ -22,6 +22,7 @@ void AbstractBuffer::CreateBuffer()
     buffer_desc_.ByteWidth = bytewidth_;
     if (!raw_data_)
     {
+        //renderer_->device()->CreateBuffer(&buffer_desc_, &data_, &buffer_);
         renderer_->device()->CreateBuffer(&buffer_desc_, nullptr, &buffer_);
         return;
     }

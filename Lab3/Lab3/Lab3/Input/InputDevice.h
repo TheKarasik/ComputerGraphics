@@ -5,6 +5,8 @@
 #include "Delegates.h"
 #include "Keys.h"
 //#include "SimpleMath.h"
+#include <iostream>
+
 #include "../../packages/directxtk_uwp.2024.2.22.1/include/SimpleMath.h"
 //#include "Exports.h"
 
@@ -33,9 +35,9 @@ public:
 	int MouseWheelDelta;
 
 	MulticastDelegate<const MouseMoveEventArgs&> MouseMove;
-	
-public:
-	
+
+	static InputDevice* GetInstance() {return singleton;}
+	InputDevice() = default;
 	InputDevice(Game* inGame);
 	~InputDevice();
 
@@ -113,9 +115,12 @@ protected:
 		int X;
 		int Y;
 	};
-
+public:
 	void OnKeyDown(KeyboardInputEventArgs args);
 	void OnMouseMove(RawMouseEventArgs args);
+    //static Delegate<KeyboardInputEventArgs> keyboard_delegate;
+	//static Delegate<int, float> del;
+	static InputDevice* singleton;
 };
 
 /*

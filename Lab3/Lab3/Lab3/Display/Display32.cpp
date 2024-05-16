@@ -1,5 +1,6 @@
 ﻿#include "Display32.h"
 
+#include "InputDevice.h"
 
 
 
@@ -7,10 +8,41 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
     switch (umessage)
     {
+    case WM_INPUT:
+    {
+            UINT dwSize;
+
+            GetRawInputData(reinterpret_cast<HRAWINPUT>(lparam),
+                RID_INPUT, nullptr, &dwSize, sizeof(RAWINPUTHEADER));
+            LPBYTE lpb = new BYTE[dwSize];
+            if (lpb == NULL) 
+            {
+                return 0;
+            } 
+
+            if (GetRawInputData(reinterpret_cast<HRAWINPUT>(lparam),
+                RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) != dwSize)
+                OutputDebugString (TEXT("GetRawInputData does not return correct size !\n")); 
+
+            RAWINPUT* raw = reinterpret_cast<RAWINPUT*>(lpb);
+
+            if (raw->header.dwType == RIM_TYPEKEYBOARD) 
+            {
+                InputDevice::singleton->OnKeyDown({
+                    raw->data.keyboard.MakeCode,
+                    raw->data.keyboard.Flags,
+                    raw->data.keyboard.VKey,
+                    raw->data.keyboard.Message
+                });
+            }
+
+            delete[] lpb; 
+            return 0;
+    }
     case WM_KEYDOWN:
         {
             // If a key is pressed send it to the input object so it can record that state.
-            std::cout << "Key: " << static_cast<unsigned int>(wparam) << std::endl;
+            //std::cout << "Key: " << static_cast<unsigned int>(wparam) << std::endl;
 
             if (static_cast<unsigned int>(wparam) == 27)
             {
@@ -25,7 +57,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
     }
 }
 
-Display32::Display32(LPCWSTR applicationName, int screenWidth, int screenHeight) :
+Display32::Display32(LPCWSTR applicationName, int screenWidth, int screenHeight, InputDevice* input_device) :
 screenWidth_(screenWidth), screenHeight_(screenHeight)
 {
     HINSTANCE hInstance = GetModuleHandle(nullptr);

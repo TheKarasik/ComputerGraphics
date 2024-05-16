@@ -6,7 +6,7 @@
 
 
 
-Triangle::Triangle(Renderer& renderer) : GameComponent(renderer)
+Triangle::Triangle(Renderer* renderer) : Drawable(renderer)
 {
     triangle_ = TriangleGeometry{
         TriangleVertex{DirectX::XMFLOAT4(-0.5, -0.5, 0.5, 1.0),
@@ -19,9 +19,15 @@ Triangle::Triangle(Renderer& renderer) : GameComponent(renderer)
     Initialize();
 }
 
-Triangle::Triangle(Renderer& renderer, TriangleGeometry triangle) : GameComponent(renderer), triangle_(triangle)
+Triangle::Triangle(Renderer* renderer, TriangleGeometry triangle) : Drawable(renderer), triangle_(triangle)
 {
     Initialize();
+}
+
+Triangle::~Triangle()
+{
+    (*vertex_buffer_->buffer())->Release();
+    (*index_buffer_->buffer())->Release();
 }
 
 Triangle& Triangle::operator=(const Triangle& triangle)
@@ -37,10 +43,11 @@ Triangle& Triangle::operator=(const Triangle& triangle)
 void Triangle::draw()
 {
     //ConstantBuffer<ConstantDataVertexShader>* cb = renderer_.constant_buffer();
-    renderer_.Context()->IASetIndexBuffer(*index_buffer_->buffer(),  DXGI_FORMAT_R32_UINT, 0);
-    renderer_.Context()->IASetVertexBuffers(0, 1, vertex_buffer_->buffer(), &strides, &offset);
+    //ID3D11Buffer* const* vb = vertex_buffer_->buffer();
+    renderer_->Context()->IASetIndexBuffer(*index_buffer_->buffer(),  DXGI_FORMAT_R32_UINT, 0);
+    renderer_->Context()->IASetVertexBuffers(0, 1, vertex_buffer_->buffer(), &strides, &offset);
     
-    renderer_.Context()->DrawIndexed(3, 0, 0);
+    renderer_->Context()->DrawIndexed(3, 0, 0);
 }
 
 void Triangle::update(TriangleGeometry* raw_data)
@@ -53,7 +60,7 @@ void Triangle::update(TriangleGeometry* raw_data)
 void Triangle::Initialize()
 {
     int indecies[] = {0, 1, 2};
-    vertex_buffer_ = new VertexBuffer(&renderer_, &triangle_, sizeof TriangleGeometry);
-    index_buffer_ = new IndexBuffer(&renderer_, indecies, 3 * sizeof(int));
+    vertex_buffer_ = new VertexBuffer(renderer_, &triangle_, sizeof TriangleGeometry);
+    index_buffer_ = new IndexBuffer(renderer_, indecies, 3 * sizeof(int));
     strides = sizeof TriangleVertex;
 }

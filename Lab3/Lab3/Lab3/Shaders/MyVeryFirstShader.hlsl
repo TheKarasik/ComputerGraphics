@@ -20,8 +20,10 @@ PS_IN VSMain( VS_IN input )
 {
 	PS_IN output = (PS_IN)0;
 	
-	output.pos = input.pos /** float4(size.xy, 1, 1)*/ + float4(offset.xy, 0, 0);
+	output.pos = input.pos * float4(size.xy, 1, 1) + float4(offset.xy, 0, 0);
+	//output.pos = input.pos;
 	output.col = input.col;
+	//output.col = float4(offset.xy, 1, 1);
 	
 	return output;
 }

@@ -4,7 +4,7 @@
 
 
 #include "PixelShader.h"
-#include "GameComponent.h"
+#include "Drawable.h"
 #include "Shader.h"
 #include "VertexShader.h"
 
@@ -13,6 +13,8 @@
 #include "ConstantBuffer.h"
 #include "Display32.h"
 #include "AbstractBuffer.h"
+
+std::vector<Drawable*> Drawable::visual_objects;
 
 Renderer::Renderer(Display32& Display) : Display_(Display)
 {
@@ -77,16 +79,16 @@ Renderer::Renderer(Display32& Display) : Display_(Display)
             0}
     };
     
-    pixel_shader = new PixelShader(*this);
-    vertex_shader = new VertexShader(*this);
+    pixel_shader_ = new PixelShader(*this);
+    vertex_shader_ = new VertexShader(*this);
 
     
     
     device_->CreateInputLayout(
         inputElements,
         2,
-        vertex_shader->byte_code()->GetBufferPointer(),
-        vertex_shader->byte_code()->GetBufferSize(),
+        vertex_shader_->byte_code()->GetBufferPointer(),
+        vertex_shader_->byte_code()->GetBufferSize(),
         &layout);
 
     CD3D11_RASTERIZER_DESC rastDesc = {};
@@ -98,7 +100,19 @@ Renderer::Renderer(Display32& Display) : Display_(Display)
     context_->RSSetState(rastState);
 }
 
-void Renderer::Render(std::vector<GameComponent*> visual_objects)
+Renderer::~Renderer()
+{
+    context_->ClearState();
+    layout->Release();
+    pixel_shader()->pixel_shader()->Release();
+    vertex_shader()->vertex_shader()->Release();
+    rtv->Release();
+    swapChain->Release();
+    context_->Release();
+    device()->Release();
+}
+
+void Renderer::Render()
 {
     context_->ClearState();
    
@@ -117,21 +131,22 @@ void Renderer::Render(std::vector<GameComponent*> visual_objects)
     context_->IASetInputLayout(layout);
     context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     
-    context_->VSSetShader(vertex_shader->vertex_shader(), nullptr, 0);
-    context_->PSSetShader(pixel_shader->pixel_shader(), nullptr, 0);
+    context_->VSSetShader(vertex_shader_->vertex_shader(), nullptr, 0);
+    context_->PSSetShader(pixel_shader_->pixel_shader(), nullptr, 0);
 
     context_->OMSetRenderTargets(1, &rtv, nullptr);
 
     float color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     context_->ClearRenderTargetView(rtv, color);
 
-    for(auto vo : visual_objects)
+    for(auto vo : Drawable::visual_objects)
     {
         (*vo).draw();
     }
 
-    //ID3D11RenderTargetView* nullViews [] = { nullptr };
-    //context_->OMSetRenderTargets(1, nullViews, 0);
     context_->OMSetRenderTargets(0, nullptr, nullptr);
+
     swapChain->Present(1, /*DXGI_PRESENT_DO_NOT_WAIT*/ 0);
 }
+
+

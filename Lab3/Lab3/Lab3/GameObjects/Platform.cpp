@@ -1,36 +1,35 @@
-#include "Platform.h"
-//#include "AbstractBuffer.h"
-#include "ConstantBuffer.h"
-#include "Renderer.h"
+﻿#include "Platform.h"
 
+#include "AIPlatformController.h"
+#include "Ball.h"
+#include "PlayerPlatformController.h"
 
-
-Platform::Platform(Renderer& renderer, float x_pos, float height) :
-    GameComponent(renderer), x_pos_(x_pos), height_(height)
-    
+Platform::Platform(Renderer* renderer, bool player_controlled, Ball* ball, RectangleGeometry rect) :
+    RectangleObject(renderer, rect), ball_(ball)
+    /*controller(player_controlled ?
+    new PlayerPlatformController(InputDevice::singleton, this) :
+    new AIPlatformController(InputDevice::singleton, this, ball))*/
 {
-    constant_buffer_ = new ConstantBuffer(&renderer_, sizeof ConstantDataVertexShader);
-    update(&y_pos_);
+    if (player_controlled) controller = new PlayerPlatformController(InputDevice::singleton, this);
+    else controller = new AIPlatformController(InputDevice::singleton, this, ball);
 }
 
-void Platform::GenerateContextBufferData()
-{
-    data_.offset = DirectX::XMFLOAT4( x_pos_, y_pos_, 0, 0);
-    data_.size = DirectX::XMFLOAT4( width_, height_, 1, 1);
-}
+void Platform::MoveUp() { rect_.pos.y += step; }
 
-void Platform::update(float* y_pos)
-{
-    y_pos_ = *y_pos;
-    GenerateContextBufferData();
-    constant_buffer_->UpdateBuffer(&data_);
-}
+void Platform::MoveDown() { rect_.pos.y -= step; }
 
-void Platform::draw()
+void Platform::update(float elapsed)
 {
-    renderer_.Context()->VSSetConstantBuffers(0, 1, constant_buffer_->buffer());
-    for(auto triangle : triangles_)
+    if (rect_.DetectCollision(ball_->rect()))
     {
-        triangle.draw();
+        ball_->XReverseVelocityVector();
+        ball_->IncreaseVelocityAmplitude();
     }
+    if (rect_.DetectVerticalBorderHit())
+    {
+        if (rect_.pos.y > 0) rect_.pos.y = 1 - rect_.size.y;
+        else if  (rect_.pos.y < 0) rect_.pos.y = -1 + rect_.size.y;
+    }
+    RectangleObject::update(elapsed);
 }
+
