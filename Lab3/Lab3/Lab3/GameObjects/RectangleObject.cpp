@@ -53,10 +53,10 @@ void RectangleObject::update(float elapsed)
 void RectangleObject::draw()
 {
     //constant_buffer_->UpdateBuffer(&data_);
+    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_->buffer());
     for(auto triangle : triangles_)
     {
-        constant_buffer_->UpdateBuffer(&data_);
-        renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_->buffer());
+        //constant_buffer_->UpdateBuffer(&data_);
         triangle->draw();
     }
 }
