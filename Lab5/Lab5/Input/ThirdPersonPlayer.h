@@ -1,15 +1,15 @@
 ﻿#pragma once
-#include "CameraObject.h"
+#include "PerspectiveCamera.h"
 #include "Controllable.h"
 #include "Structs.h"
 
-class CameraObject;
+class PerspectiveCamera;
 class Mesh;
 
 class ThirdPersonPlayer : public Controllable, public Updatable
 {
 public:
-    ThirdPersonPlayer(Mesh* controllable_obj, CameraObject* camera);
+    ThirdPersonPlayer(Mesh* controllable_obj, PerspectiveCamera* camera);
     void RotateCamera(const MouseMoveEventArgs& event);
     void Control() override;
     void update() override;
@@ -22,5 +22,5 @@ private:
     float angular_step_camera_x = Pi/180*0.5;
     float angular_step_camera_y = Pi/180*0.1;
     Mesh* controllable_obj_;
-    CameraObject* camera_;
+    PerspectiveCamera* camera_;
 };

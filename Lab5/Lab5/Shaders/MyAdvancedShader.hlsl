@@ -1,13 +1,21 @@
 Texture2D txDiffuse : register( t0 );
+Texture2D txShadowmap : register( t1 );
 
 SamplerState samLinear : register( s0 );
+SamplerState samShadowmap : register( s1 );
+
+/*
+ * RenderState == 0 - Рендер для игрока (MainRender);
+ * RenderState == 1 - Рендер теней (Shadowmap);
+ * RenderState == 2 - Рендер мини карты (Minimap);
+ */
 
 cbuffer ConstantBufferMatrixes : register( b0 )
 {
     matrix World;  
     matrix ProjView;
     float4 CameraPos;
-    bool IsPerspective;
+    bool RenderState;
 }
 
 struct Material
@@ -51,7 +59,7 @@ struct VS_INPUT
 struct PS_INPUT                   
 {
     float4 Pos : SV_POSITION;    
-    float4 PosWS : POSITION;     
+    float4 PosWS : POSITION;
     float2 Tex : TEXCOORD0;       
     float3 Norm : NORMAL;    
 };
@@ -95,6 +103,16 @@ PS_INPUT VSMain( VS_INPUT input )
 
 float4 PSMain( PS_INPUT input) : SV_Target
 {
+    float4 col;
+    
+    //Рендер Shadowmap
+    if (RenderState == 1)
+    {
+        float depthValue = input.Pos.z / input.Pos.w;
+        return float4(depthValue, depthValue, depthValue, 1.0f);
+    }
+
+    //Рендер основной    
     //return float4 (input.Norm, 1);
     /*for(int i=0; i<2; i++)
     {
@@ -125,9 +143,26 @@ float4 PSMain( PS_INPUT input) : SV_Target
     diffuse *= lit.diffuse;
     specular = lit.specular;
     specular *= material.specular_scale;
-    float4 col = float4((ambient + diffuse + specular).rgb, 1);
+    col = float4((ambient + diffuse + specular).rgb, 1);
 
-    if(!IsPerspective) col = 0.2989 * col.x + 0.5870 * col.y + 0.1140 * col.z;
+    //Добавляем тени
+    // = mul( input.PosWS, mViewProj);
+    float2 projectTexCoord;
+    projectTexCoord.x =  input.Pos.x / input.Pos.w / 2.0f + 0.5f;
+    projectTexCoord.y = -input.Pos.y / input.Pos.w / 2.0f + 0.5f;
+    if(saturate(projectTexCoord.x) == projectTexCoord.x && saturate(projectTexCoord.y) == projectTexCoord.y)
+    {
+        float depthValue = txShadowmap.Sample(samShadowmap, projectTexCoord).r;
+        float lightDepthValue = input.Pos.z
+    }
+    
+    //Обработка мини карты
+    //if(RenderState == 2) col = 0.2989 * col.x + 0.5870 * col.y + 0.1140 * col.z;
+    
+    return col;
+    
+    //Обработка теней
+    
 
     return col;
 }

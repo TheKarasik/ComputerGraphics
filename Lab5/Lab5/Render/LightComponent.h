@@ -1,9 +1,14 @@
 ﻿#pragma once
 #include <SimpleMath.h>
 
-#include "ConstantBuffer.h"
+//#include "ConstantBuffer.h"
+#include "Structs.h"
+#include "d3d11.h"
 #include "Updatable.h"
 
+
+class OrthographicCamera;
+class Renderer;
 
 class LightComponent : public Updatable
 {
@@ -12,6 +17,7 @@ public:
     void update() override;
     void SetUpMatricies();
     void Activate();
+    void InitializeShadows();
     Renderer* renderer_;
     DirectX::SimpleMath::Matrix view_matrix_;
     DirectX::SimpleMath::Matrix ortographic_matrix_;
@@ -22,11 +28,13 @@ public:
     float height_ = 800;
     float near_ = -100;
     float far_ = 100;
-    struct LightDataStruct
-    {
-        DirectX::SimpleMath::Matrix mViewProj;
-        DirectX::SimpleMath::Vector4 directionWS;
-        DirectX::SimpleMath::Vector4 color = DirectX::SimpleMath::Vector4(1,1,1,1);
-    } light_data;
-    ConstantBuffer<LightDataStruct>* constant_buffer_light;
+    LightDataStruct light_data;
+    //ConstantBuffer<LightDataStruct>* constant_buffer_light;
+    OrthographicCamera* ShadowmapCamera;
+    ID3D11Texture2D* RTTextureShadow;
+    ID3D11Texture2D* DSTextureShadow;
+    ID3D11DepthStencilView* DSVShadow;
+    ID3D11RenderTargetView* RTVShadow;
+    ID3D11ShaderResourceView* SRVShadow;
+    ID3D11SamplerState* SamplerState;
 };

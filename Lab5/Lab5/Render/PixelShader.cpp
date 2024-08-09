@@ -1,6 +1,6 @@
 #include "PixelShader.h"
 
-PixelShader::PixelShader(Renderer& renderer) : Shader(renderer)
+PixelShader::PixelShader(Renderer& renderer, LPCWSTR file_name) : Shader(renderer, file_name)
 {
     entry_point_ = "PSMain";
     target_ = "ps_5_0";

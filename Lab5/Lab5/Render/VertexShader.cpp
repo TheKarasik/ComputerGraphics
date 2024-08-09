@@ -1,6 +1,6 @@
 #include "VertexShader.h"
 
-VertexShader::VertexShader(Renderer& renderer) : Shader(renderer)
+VertexShader::VertexShader(Renderer& renderer, LPCWSTR file_name) : Shader(renderer, file_name)
 {
     entry_point_ = "VSMain";
     target_ = "vs_5_0";

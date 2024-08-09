@@ -15,12 +15,13 @@
 #define S_PER_UPDATE 0.016
 
 class MiniMapCamera;
+class OrthographicCamera;
 class LightComponent;
 class ThirdPersonPlayer;
 class Object3D;
 class Texture;
 class Renderer;
-class CameraObject;
+class PerspectiveCamera;
 
 class Game
 {
@@ -44,7 +45,7 @@ private:
     Mesh* plane;
     Texture* body_texture;
     Texture* whiskers_texture;
-    CameraObject* camera_;
+    PerspectiveCamera* camera_;
     MiniMapCamera* mini_map_camera_;
     Renderer* renderer_;
     InputDevice* input_;

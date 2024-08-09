@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-Shader::Shader(Renderer& renderer) : renderer_(renderer) {}
+Shader::Shader(Renderer& renderer, LPCWSTR file_name) : renderer_(renderer), file_name_(file_name) {}
 
 void Shader::CompileShader()
 {

@@ -10,7 +10,7 @@ public:
     virtual ~Shader() = default;
     ID3DBlob* byte_code() {return byte_code_;}
 protected:
-    Shader(Renderer& renderer);
+    Shader(Renderer& renderer, LPCWSTR file_name);
     virtual void CompileShader() final;
     virtual void CreateShader() = 0;
 
@@ -19,7 +19,7 @@ protected:
     ID3DBlob* byte_code_;
     ID3DBlob* error_byte_code_;
     
-    LPCWSTR file_name_ = L"./Shaders/MyAdvancedShader.hlsl";
+    LPCWSTR file_name_;
     D3D_SHADER_MACRO* shader_macro_ = nullptr;
     LPCSTR entry_point_ = nullptr;
     LPCSTR target_ = nullptr;

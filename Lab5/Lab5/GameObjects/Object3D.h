@@ -1,5 +1,5 @@
 #pragma once
-#include "ConstantBuffer.h"
+//#include "ConstantBuffer.h"
 #include "Drawable.h"
 #include "Updatable.h"
 #include "GeometricPrimitive.h"
@@ -11,13 +11,7 @@ class ConstantBuffer;*/
 class Object3D : public Updatable, public Drawable
 {
 public:
-    struct ConstantBufferTransformMatricies
-    {
-        DirectX::SimpleMath::Matrix world;
-        DirectX::SimpleMath::Matrix projection_view;
-        DirectX::SimpleMath::Vector4 camera_position;
-        alignas (16) bool IsPerspective;
-    } transform_matricies_buffer_data;
+    ConstantBufferTransformMatricies transform_matricies_buffer_data;
     DirectX::SimpleMath::Matrix all_transform_matrix;
     
     Object3D(Renderer* renderer, DirectX::SimpleMath::Matrix transformation = DirectX::SimpleMath::Matrix::Identity,
@@ -74,6 +68,5 @@ private:
     DirectX::SimpleMath::Vector4 color;
 protected:
     Object3D* parent_ = nullptr;
-    //ConstantBuffer<DirectX::SimpleMath::Matrix>* constant_buffer_transform;
-    ConstantBuffer<ConstantBufferTransformMatricies>* constant_buffer_transform;
+    //ConstantBuffer<ConstantBufferTransformMatricies>* constant_buffer_transform;
 };

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <string>
 
-#include "ConstantBuffer.h"
+//#include "ConstantBuffer.h"
 #include "PixelShader.h"
 
 class Renderer;
@@ -9,18 +9,11 @@ class Renderer;
 class Texture
 {
 public:
-    struct MaterialProperties
-    {
-        DirectX::SimpleMath::Vector4 global_ambient = DirectX::SimpleMath::Vector4(0.2f);
-        DirectX::SimpleMath::Vector4 specular_color = DirectX::SimpleMath::Vector4::One;
-        float specular_power = 50.0f;
-        float specular_scale = 0.25f;
-        DirectX::SimpleMath::Vector2 padding;
-    } MatProp;
+    MaterialProperties MatProp;
     Texture(Renderer* renderer, const wchar_t* pFile);
     ID3D11SamplerState** sampler() {return &sampler_;}
     ID3D11ShaderResourceView** srv() {return &srv_;}
-    ConstantBuffer<MaterialProperties>* texture_constant_buffer_;
+    //ConstantBuffer<MaterialProperties>* texture_constant_buffer_;
 private:
     Renderer* renderer_;
     ID3D11ShaderResourceView* srv_;

@@ -14,11 +14,13 @@
 #include "Display32.h"
 #include "AbstractBuffer.h"
 #include "LightComponent.h"
+#include "MainShader.h"
 #include "MiniMapCamera.h"
+#include "OrthographicCamera.h"
 
 std::vector<Drawable*> Drawable::visual_objects;
 
-Renderer::Renderer(Display32& Display, CameraObject* camera) : Display_(Display), camera_(camera)
+Renderer::Renderer(Display32& Display, PerspectiveCamera* camera) : Display_(Display), camera_(camera)
 {
     D3D_FEATURE_LEVEL featureLevel[] = { D3D_FEATURE_LEVEL_11_1 };
 
@@ -89,6 +91,8 @@ Renderer::Renderer(Display32& Display, CameraObject* camera) : Display_(Display)
  
     device_->CreateDepthStencilState( &depth_stencil_state_desc, &depth_stencil_state_);
 
+    //Mini map creation
+
     D3D11_TEXTURE2D_DESC black_white_buffer_desc;
     ZeroMemory( &black_white_buffer_desc, sizeof(D3D11_TEXTURE2D_DESC) );
  
@@ -120,7 +124,9 @@ Renderer::Renderer(Display32& Display, CameraObject* camera) : Display_(Display)
     res = device_->CreateRenderTargetView(mini_map_buffer_, &renderTargetViewDesc, &rtv_mini_map);
     device()->CreateShaderResourceView(mini_map_buffer_, &shaderResourceViewDesc, &srv_mini_map);
 
-    D3D11_INPUT_ELEMENT_DESC inputElements[] = {
+    main_shader_ = new MainShader(this);
+
+    /*D3D11_INPUT_ELEMENT_DESC inputElements[] = {
         D3D11_INPUT_ELEMENT_DESC {
             "POSITION",
             0,
@@ -136,7 +142,7 @@ Renderer::Renderer(Display32& Display, CameraObject* camera) : Display_(Display)
             0,
             D3D11_APPEND_ALIGNED_ELEMENT,
             D3D11_INPUT_PER_VERTEX_DATA,
-            0}*/
+            0}#1#
         D3D11_INPUT_ELEMENT_DESC{
             "TEXCOORD",
             0,
@@ -157,8 +163,6 @@ Renderer::Renderer(Display32& Display, CameraObject* camera) : Display_(Display)
     
     pixel_shader_ = new PixelShader(*this);
     vertex_shader_ = new VertexShader(*this);
-
-    
     
     device_->CreateInputLayout(
         inputElements,
@@ -173,7 +177,7 @@ Renderer::Renderer(Display32& Display, CameraObject* camera) : Display_(Display)
 
     res = device_->CreateRasterizerState(&rastDesc, &rastState);
 
-    context_->RSSetState(rastState);
+    context_->RSSetState(rastState);*/
     
 }
 
@@ -181,8 +185,8 @@ Renderer::~Renderer()
 {
     context_->ClearState();
     layout->Release();
-    pixel_shader()->pixel_shader()->Release();
-    vertex_shader()->vertex_shader()->Release();
+    pixel_shader_->pixel_shader()->Release();
+    vertex_shader_->vertex_shader()->Release();
     rtv_main->Release();
     swapChain->Release();
     context_->Release();
@@ -191,10 +195,31 @@ Renderer::~Renderer()
 
 void Renderer::Render()
 {
-    context_->ClearState();
-   
-    context_->RSSetState(rastState);
+    //Рендер сцены для ShadowMap
     for (auto co : Updatable::changing_objects) co->update();
+
+    D3D11_VIEWPORT viewport_shadowmap = {};
+    viewport_shadowmap.Width = SHADOWMAP_WIDTH;
+    viewport_shadowmap.Height = SHADOWMAP_HEIGHT;
+    viewport_shadowmap.TopLeftX = 0;
+    viewport_shadowmap.TopLeftY = 0;
+    viewport_shadowmap.MinDepth = 0;
+    viewport_shadowmap.MaxDepth = 1.0f;
+
+    context_->OMSetRenderTargets(1, &light_->RTVShadow, light_->DSVShadow);
+    context_->RSSetViewports(1, &viewport_shadowmap);
+    //light_->Activate();
+    for(auto vo : Drawable::visual_objects)
+    {
+        (*vo).draw();
+    }
+    RenderingState = MainRenderState;
+    
+    //Рендер сцены для игрока
+    main_shader_->Activate();
+    
+    for (auto co : Updatable::changing_objects) co->update();
+    
     D3D11_VIEWPORT viewport = {};
     viewport.Width = static_cast<float>(Display_.screenWidth_);
     viewport.Height = static_cast<float>(Display_.screenHeight_);
@@ -202,12 +227,6 @@ void Renderer::Render()
     viewport.TopLeftY = 0;
     viewport.MinDepth = 0;
     viewport.MaxDepth = 1.0f;
-
-    context_->IASetInputLayout(layout);
-    context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    
-    context_->VSSetShader(vertex_shader_->vertex_shader(), nullptr, 0);
-    context_->PSSetShader(pixel_shader_->pixel_shader(), nullptr, 0);
 
     context_->OMSetRenderTargets(1, &rtv_main, dsv);
     context_->OMSetDepthStencilState(depth_stencil_state_, 1);
@@ -223,8 +242,9 @@ void Renderer::Render()
     {
         (*vo).draw();
     }
-    IsRenderingMain = false;
-
+    RenderingState = MinimapRenderState;
+    
+    //Рендер мини карты
     for (auto co : Updatable::changing_objects) co->update();
     
     D3D11_VIEWPORT viewport_mini_map = {};
@@ -245,13 +265,26 @@ void Renderer::Render()
     }
     
     swapChain->Present(1, /*DXGI_PRESENT_DO_NOT_WAIT*/ 0);
-    IsRenderingMain = true;
+    RenderingState = MainRenderState;
 }
 
-CameraObject* Renderer::camera()
+PerspectiveCamera* Renderer::camera()
 {
-    if(IsRenderingMain) return camera_;
-    return mini_map_camera_;
+    if(RenderingState == MainRenderState) return camera_;
+    if(RenderingState == MinimapRenderState) return mini_map_camera_;
+    if(RenderingState == ShadowmapRenderState) return light_->ShadowmapCamera;
+}
+
+void Renderer::UpdateTransformData(Object3D::ConstantBufferTransformMatricies* TransformData)
+{
+    
+}
+
+void Renderer::SetUpLightAndShadows(LightComponent* light)
+{
+    light_ = light;
+    light_->InitializeShadows();
+    main_shader_->SetLight(light_);
 }
 
 

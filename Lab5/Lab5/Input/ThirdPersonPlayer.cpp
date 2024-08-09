@@ -2,7 +2,7 @@
 
 #include "Mesh.h"
 
-ThirdPersonPlayer::ThirdPersonPlayer(Mesh* controllable_obj, CameraObject* camera) : controllable_obj_(controllable_obj),Controllable(InputDevice::singleton), camera_(camera)
+ThirdPersonPlayer::ThirdPersonPlayer(Mesh* controllable_obj, PerspectiveCamera* camera) : controllable_obj_(controllable_obj),Controllable(InputDevice::singleton), camera_(camera)
 {
     controllable_obj_->PlayerControlled = true;
     

@@ -6,7 +6,6 @@
 
 Texture::Texture(Renderer* renderer, const wchar_t* pFile) : renderer_(renderer)
 {
-    texture_constant_buffer_ = new ConstantBuffer<MaterialProperties>(renderer_);
     //DirectX::CreateWICTextureFromFile(renderer_->device().Get(), renderer_->Context(), pFile, nullptr, &srv_);
     DirectX::CreateWICTextureFromFile(renderer_->device().Get(), pFile, nullptr, &srv_);
     //sampler_desc_ = new D3D11_SAMPLER_DESC();

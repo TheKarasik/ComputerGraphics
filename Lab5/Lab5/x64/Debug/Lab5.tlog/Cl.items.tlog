@@ -10,10 +10,11 @@ D:\Study\Computer Graphics\Lab5\Lab5\Input\InputDevice.cpp;D:\Study\Computer Gra
 D:\Study\Computer Graphics\Lab5\Lab5\Input\ThirdPersonPlayer.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\ThirdPersonPlayer.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Lab5.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Lab5.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Render\AbstractBuffer.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\AbstractBuffer.obj
-D:\Study\Computer Graphics\Lab5\Lab5\Render\CameraObject.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\CameraObject.obj
+D:\Study\Computer Graphics\Lab5\Lab5\Render\MiniMapCamera.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\MiniMapCamera.obj
+D:\Study\Computer Graphics\Lab5\Lab5\Render\PerspectiveCamera.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\PerspectiveCamera.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Render\IndexBuffer.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\IndexBuffer.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Render\LightComponent.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\LightComponent.obj
-D:\Study\Computer Graphics\Lab5\Lab5\Render\MiniMapCamera.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\MiniMapCamera.obj
+D:\Study\Computer Graphics\Lab5\Lab5\Render\OrthographicCamera.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\OrthographicCamera.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Render\PixelShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\PixelShader.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Render\Renderer.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Renderer.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Render\Shader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Shader.obj

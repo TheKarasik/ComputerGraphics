@@ -13,6 +13,30 @@ struct TriangleVertex     //New version
     DirectX::XMFLOAT3 normal;
 };
 
+struct ConstantBufferTransformMatricies
+{
+    DirectX::SimpleMath::Matrix world;
+    DirectX::SimpleMath::Matrix projection_view;
+    DirectX::SimpleMath::Vector4 camera_position;
+    alignas (16) bool RenderState;
+};
+
+struct MaterialProperties
+{
+    DirectX::SimpleMath::Vector4 global_ambient = DirectX::SimpleMath::Vector4(0.2f);
+    DirectX::SimpleMath::Vector4 specular_color = DirectX::SimpleMath::Vector4::One;
+    float specular_power = 50.0f;
+    float specular_scale = 0.25f;
+    DirectX::SimpleMath::Vector2 padding;
+};
+
+struct LightDataStruct
+{
+    DirectX::SimpleMath::Matrix mViewProj;
+    DirectX::SimpleMath::Vector4 directionWS;
+    DirectX::SimpleMath::Vector4 color = DirectX::SimpleMath::Vector4(1,1,1,1);
+};
+
 /*struct TriangleVertex       //Old version
 {
     TriangleVertex(DirectX::XMFLOAT4 pos) : position(pos), color(DirectX::XMFLOAT4(1,1,1,1)) {}
@@ -46,6 +70,14 @@ struct MouseMoveEventArgs
     DirectX::SimpleMath::Vector2 Position;
     DirectX::SimpleMath::Vector2 Offset;
     int WheelDelta;
+};
+
+
+enum RenderStateEnum
+{
+    MainRenderState = 0,
+    ShadowmapRenderState = 1,
+    MinimapRenderState = 2
 };
 
 /*struct RectangleGeometry

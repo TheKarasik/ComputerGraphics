@@ -244,19 +244,23 @@
     <ClCompile Include="Input\ThirdPersonPlayer.cpp" />
     <ClCompile Include="Lab5.cpp" />
     <ClCompile Include="Render\AbstractBuffer.cpp" />
-    <ClCompile Include="Render\CameraObject.cpp" />
+    <ClCompile Include="Render\MiniMapCamera.cpp" />
+    <ClCompile Include="Render\PerspectiveCamera.cpp" />
     <ClCompile Include="Render\IndexBuffer.cpp" />
     <ClCompile Include="Render\LightComponent.cpp" />
-    <ClCompile Include="Render\MiniMapCamera.cpp" />
+    <ClCompile Include="Render\OrthographicCamera.cpp" />
     <ClCompile Include="Render\PixelShader.cpp" />
     <ClCompile Include="Render\Renderer.cpp" />
     <ClCompile Include="Render\Shader.cpp" />
+    <ClCompile Include="Render\MainShader.cpp" />
+    <ClCompile Include="Render\ShadowmapShader.cpp" />
     <ClCompile Include="Render\Texture.cpp" />
     <ClCompile Include="Render\VertexBuffer.cpp" />
     <ClCompile Include="Render\VertexShader.cpp" />
     <None Include="Shaders\MyAdvancedShader.hlsl" />
     <ClCompile Include="Utils\Delegates.cpp" />
     <ClCompile Include="Utils\Importer3D.cpp" />
+    <None Include="Shaders\MyShadowmapShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Controllable.h" />
@@ -273,15 +277,18 @@
     <ClInclude Include="Input\InputDevice.h" />
     <ClInclude Include="Input\ThirdPersonPlayer.h" />
     <ClInclude Include="Render\AbstractBuffer.h" />
-    <ClInclude Include="Render\CameraObject.h" />
+    <ClInclude Include="Render\MiniMapCamera.h" />
+    <ClInclude Include="Render\PerspectiveCamera.h" />
     <ClInclude Include="Render\ConstantBuffer.h" />
     <ClInclude Include="Render\ConstantBuffer.hpp" />
     <ClInclude Include="Render\IndexBuffer.h" />
     <ClInclude Include="Render\LightComponent.h" />
-    <ClInclude Include="Render\MiniMapCamera.h" />
+    <ClInclude Include="Render\OrthographicCamera.h" />
     <ClInclude Include="Render\PixelShader.h" />
     <ClInclude Include="Render\Renderer.h" />
     <ClInclude Include="Render\Shader.h" />
+    <ClInclude Include="Render\MainShader.h" />
+    <ClInclude Include="Render\ShadowmapShader.h" />
     <ClInclude Include="Render\Texture.h" />
     <ClInclude Include="Render\VertexBuffer.h" />
     <ClInclude Include="Render\VertexShader.h" />

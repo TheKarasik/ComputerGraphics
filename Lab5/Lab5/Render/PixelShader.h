@@ -4,7 +4,7 @@
 class PixelShader : public Shader
 {
 public:
-    PixelShader(Renderer& renderer);
+    PixelShader(Renderer& renderer, LPCWSTR file_name);
     virtual void CreateShader() override;
     ID3D11PixelShader* pixel_shader() {return  pixel_shader_;}
 private:

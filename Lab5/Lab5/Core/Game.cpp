@@ -8,10 +8,11 @@
 #include <random>
 
 #include "Renderer.h"
-#include "CameraObject.h"
+#include "PerspectiveCamera.h"
 #include "LightComponent.h"
 #include "Mesh.h"
 #include "MiniMapCamera.h"
+#include "OrthographicCamera.h"
 #include "Texture.h"
 #include "ThirdPersonPlayer.h"
 
@@ -24,7 +25,7 @@ Game::Game()
     input_ = new InputDevice(this);
     
     float deg = 3.14/180*0;
-    camera_ = new CameraObject(DirectX::SimpleMath::Vector3(0, 1, -10),
+    camera_ = new PerspectiveCamera(DirectX::SimpleMath::Vector3(0, 1, -10),
         DirectX::SimpleMath::Vector3(0, sin(deg), cos(deg)), DirectX::SimpleMath::Vector3(0, cos(deg), -sin(deg)));
 
     mini_map_camera_ = new MiniMapCamera(DirectX::SimpleMath::Vector3(0,50,0),
@@ -32,7 +33,7 @@ Game::Game()
     
     renderer_ = new Renderer(*display_, camera_);
     light = new LightComponent(renderer_);
-    renderer_->SetLight(light);
+    renderer_->SetUpLightAndShadows(light);
     renderer_->SetMiniMapCamera(mini_map_camera_);
     
     //Import Maxwell

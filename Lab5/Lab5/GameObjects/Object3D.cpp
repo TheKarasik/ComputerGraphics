@@ -8,7 +8,6 @@
 Object3D::Object3D(Renderer* renderer, DirectX::SimpleMath::Matrix transformation, Object3D* parent) : Drawable(renderer),
     parent_(parent), world_transformation_matrix_(transformation)
 {
-    constant_buffer_transform = new ConstantBuffer<ConstantBufferTransformMatricies>(renderer_);
 }
 
 void Object3D::set_local_transformation(DirectX::SimpleMath::Matrix m)
@@ -50,9 +49,9 @@ void Object3D::update()
 
     DirectX::SimpleMath::Vector3 cam_pos = renderer_->camera()->position();
     transform_matricies_buffer_data.camera_position = DirectX::SimpleMath::Vector4(cam_pos.x, cam_pos.y, cam_pos.z, 1);
-    transform_matricies_buffer_data.IsPerspective = renderer_->IsRenderingMain;
+    transform_matricies_buffer_data.RenderState = renderer_->RenderingState == MainRenderState;
     
-    constant_buffer_transform->UpdateBuffer(&transform_matricies_buffer_data);
+    //constant_buffer_transform->UpdateBuffer(&transform_matricies_buffer_data);
 
     //rotation_.Normalize();
     GenerateWorldMatricies();
