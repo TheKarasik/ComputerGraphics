@@ -62,9 +62,7 @@ void Mesh::draw()
 {
     Object3D::draw();
 
-    renderer_->Context()->PSSetConstantBuffers(1,1,texture_->texture_constant_buffer_->buffer());
-    renderer_->Context()->PSSetShaderResources(0,1,texture_->srv());
-    renderer_->Context()->PSSetSamplers(0,1,texture_->sampler());
+    renderer_->ProvideMeshData(this);
 
     renderer_->Context()->IASetIndexBuffer(indexBuffer,  DXGI_FORMAT_R32_UINT, 0);
     renderer_->Context()->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, &offset);
@@ -91,7 +89,7 @@ void Mesh::update()
     }
     sphere->Center = this->location();
     
-    texture_->texture_constant_buffer_->UpdateBuffer(&texture_->MatProp);
+    //texture_->texture_constant_buffer_->UpdateBuffer(&texture_->MatProp);
 }
 
 void Mesh::set_bounding_sphere()

@@ -46,7 +46,7 @@ private:
     Texture* body_texture;
     Texture* whiskers_texture;
     PerspectiveCamera* camera_;
-    MiniMapCamera* mini_map_camera_;
+    //MiniMapCamera* mini_map_camera_;
     Renderer* renderer_;
     InputDevice* input_;
     Display32* display_;

@@ -17,6 +17,7 @@
 #include "MainShader.h"
 #include "MiniMapCamera.h"
 #include "OrthographicCamera.h"
+#include "ShadowmapShader.h"
 
 std::vector<Drawable*> Drawable::visual_objects;
 
@@ -60,40 +61,11 @@ Renderer::Renderer(Display32& Display, PerspectiveCamera* camera) : Display_(Dis
         // Well, that was unexpected
     }
 
-    ID3D11Texture2D* backTex;
-    res = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backTex);	// __uuidof(ID3D11Texture2D)
-    res = device_->CreateRenderTargetView(backTex, nullptr, &rtv_main);
-
-    D3D11_TEXTURE2D_DESC depth_stencil_buffer_desc;
-    ZeroMemory( &depth_stencil_buffer_desc, sizeof(D3D11_TEXTURE2D_DESC) );
- 
-    depth_stencil_buffer_desc.ArraySize = 1;
-    depth_stencil_buffer_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depth_stencil_buffer_desc.CPUAccessFlags = 0; // No CPU access required.
-    depth_stencil_buffer_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depth_stencil_buffer_desc.Width = Display_.screenWidth_;
-    depth_stencil_buffer_desc.Height = Display_.screenHeight_;
-    depth_stencil_buffer_desc.MipLevels = 1;
-    depth_stencil_buffer_desc.SampleDesc.Count = 1;
-    depth_stencil_buffer_desc.SampleDesc.Quality = 0;
-    depth_stencil_buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+    main_shader_ = new MainShader(this, swapChain, device_, Display_);
     
-    device_->CreateTexture2D( &depth_stencil_buffer_desc, nullptr, &depth_stencil_buffer_);
-    device_->CreateDepthStencilView(depth_stencil_buffer_, nullptr, &dsv);
-
-    D3D11_DEPTH_STENCIL_DESC depth_stencil_state_desc;
-    ZeroMemory( &depth_stencil_state_desc, sizeof(D3D11_DEPTH_STENCIL_DESC) );
- 
-    depth_stencil_state_desc.DepthEnable = TRUE;
-    depth_stencil_state_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    depth_stencil_state_desc.DepthFunc = D3D11_COMPARISON_LESS;
-    depth_stencil_state_desc.StencilEnable = FALSE;
- 
-    device_->CreateDepthStencilState( &depth_stencil_state_desc, &depth_stencil_state_);
-
     //Mini map creation
 
-    D3D11_TEXTURE2D_DESC black_white_buffer_desc;
+    /*D3D11_TEXTURE2D_DESC black_white_buffer_desc;
     ZeroMemory( &black_white_buffer_desc, sizeof(D3D11_TEXTURE2D_DESC) );
  
     black_white_buffer_desc.ArraySize = 1;
@@ -122,72 +94,27 @@ Renderer::Renderer(Display32& Display, PerspectiveCamera* camera) : Display_(Dis
     
     device_->CreateTexture2D( &black_white_buffer_desc, nullptr, &mini_map_buffer_);
     res = device_->CreateRenderTargetView(mini_map_buffer_, &renderTargetViewDesc, &rtv_mini_map);
-    device()->CreateShaderResourceView(mini_map_buffer_, &shaderResourceViewDesc, &srv_mini_map);
-
-    main_shader_ = new MainShader(this);
-
-    /*D3D11_INPUT_ELEMENT_DESC inputElements[] = {
-        D3D11_INPUT_ELEMENT_DESC {
-            "POSITION",
-            0,
-            DXGI_FORMAT_R32G32B32A32_FLOAT,
-            0,
-            D3D11_APPEND_ALIGNED_ELEMENT,
-            D3D11_INPUT_PER_VERTEX_DATA,
-            0},
-        /*D3D11_INPUT_ELEMENT_DESC {
-            "COLOR",
-            0,
-            DXGI_FORMAT_R32G32B32A32_FLOAT,
-            0,
-            D3D11_APPEND_ALIGNED_ELEMENT,
-            D3D11_INPUT_PER_VERTEX_DATA,
-            0}#1#
-        D3D11_INPUT_ELEMENT_DESC{
-            "TEXCOORD",
-            0,
-            DXGI_FORMAT_R32G32_FLOAT,
-            0,
-            D3D11_APPEND_ALIGNED_ELEMENT,
-            D3D11_INPUT_PER_VERTEX_DATA,
-            0},
-        D3D11_INPUT_ELEMENT_DESC{
-            "NORMAL",
-            0,
-            DXGI_FORMAT_R32G32B32_FLOAT,
-            0,
-            D3D11_APPEND_ALIGNED_ELEMENT,
-            D3D11_INPUT_PER_VERTEX_DATA,
-            0}
-    };
+    device()->CreateShaderResourceView(mini_map_buffer_, &shaderResourceViewDesc, &srv_mini_map);*/
     
-    pixel_shader_ = new PixelShader(*this);
-    vertex_shader_ = new VertexShader(*this);
-    
-    device_->CreateInputLayout(
-        inputElements,
-        3,
-        vertex_shader_->byte_code()->GetBufferPointer(),
-        vertex_shader_->byte_code()->GetBufferSize(),
-        &layout);
+}
 
-    CD3D11_RASTERIZER_DESC rastDesc = {};
-    rastDesc.CullMode = D3D11_CULL_NONE;
-    rastDesc.FillMode = D3D11_FILL_SOLID;
 
-    res = device_->CreateRasterizerState(&rastDesc, &rastState);
 
-    context_->RSSetState(rastState);*/
-    
+void Renderer::SetUpLightAndShadows(LightComponent* light)
+{
+    light_ = light;
+    //light_->InitializeShadows();
+    main_shader_->ProvideLightData(light);
+    light_->shadowmap_shader->ProvideLightData(light);
 }
 
 Renderer::~Renderer()
 {
     context_->ClearState();
-    layout->Release();
-    pixel_shader_->pixel_shader()->Release();
-    vertex_shader_->vertex_shader()->Release();
-    rtv_main->Release();
+    //layout->Release();
+    //pixel_shader_->pixel_shader()->Release();
+    //vertex_shader_->vertex_shader()->Release();
+    //rtv_main->Release();
     swapChain->Release();
     context_->Release();
     device()->Release();
@@ -196,55 +123,29 @@ Renderer::~Renderer()
 void Renderer::Render()
 {
     //Рендер сцены для ShadowMap
-    for (auto co : Updatable::changing_objects) co->update();
-
-    D3D11_VIEWPORT viewport_shadowmap = {};
-    viewport_shadowmap.Width = SHADOWMAP_WIDTH;
-    viewport_shadowmap.Height = SHADOWMAP_HEIGHT;
-    viewport_shadowmap.TopLeftX = 0;
-    viewport_shadowmap.TopLeftY = 0;
-    viewport_shadowmap.MinDepth = 0;
-    viewport_shadowmap.MaxDepth = 1.0f;
-
-    context_->OMSetRenderTargets(1, &light_->RTVShadow, light_->DSVShadow);
-    context_->RSSetViewports(1, &viewport_shadowmap);
+    RenderingState = ShadowmapRenderState;
+    //for (auto co : Updatable::changing_objects) co->update(); //!!!ВОЗМОЖНО ПРИДЁТСЯ РАСКОММЕНТИРОВАТЬ!!!
+    light_->shadowmap_shader->Activate();
     //light_->Activate();
     for(auto vo : Drawable::visual_objects)
     {
         (*vo).draw();
     }
-    RenderingState = MainRenderState;
+    
+    //swapChain->Present(1, /*DXGI_PRESENT_DO_NOT_WAIT*/ 0);
     
     //Рендер сцены для игрока
+    //for (auto co : Updatable::changing_objects) co->update(); //!!!ВОЗМОЖНО ПРИДЁТСЯ РАСКОММЕНТИРОВАТЬ!!!
+    
+    RenderingState = MainRenderState;
     main_shader_->Activate();
-    
-    for (auto co : Updatable::changing_objects) co->update();
-    
-    D3D11_VIEWPORT viewport = {};
-    viewport.Width = static_cast<float>(Display_.screenWidth_);
-    viewport.Height = static_cast<float>(Display_.screenHeight_);
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.MinDepth = 0;
-    viewport.MaxDepth = 1.0f;
-
-    context_->OMSetRenderTargets(1, &rtv_main, dsv);
-    context_->OMSetDepthStencilState(depth_stencil_state_, 1);
-
-    float color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    context_->ClearRenderTargetView(rtv_main, color);
-    context_->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1, 0);
-
-    context_->RSSetViewports(1, &viewport);
-    
-    light_->Activate();
     for(auto vo : Drawable::visual_objects)
     {
         (*vo).draw();
     }
-    RenderingState = MinimapRenderState;
     
     //Рендер мини карты
+    /*RenderingState = MinimapRenderState;
     for (auto co : Updatable::changing_objects) co->update();
     
     D3D11_VIEWPORT viewport_mini_map = {};
@@ -262,30 +163,36 @@ void Renderer::Render()
     for(auto vo : Drawable::visual_objects)
     {
         (*vo).draw();
-    }
+    }*/
     
     swapChain->Present(1, /*DXGI_PRESENT_DO_NOT_WAIT*/ 0);
-    RenderingState = MainRenderState;
+    RenderingState = NoRenderState;
+}
+
+void Renderer::ProvideMeshData(Mesh* mesh)
+{
+    switch (RenderingState)
+    {
+    case MainRenderState:
+        main_shader_->ProvideMeshData(mesh);
+        break;
+    case ShadowmapRenderState:
+        light_->shadowmap_shader->ProvideMeshData(mesh);
+        break;
+    }
 }
 
 PerspectiveCamera* Renderer::camera()
 {
-    if(RenderingState == MainRenderState) return camera_;
-    if(RenderingState == MinimapRenderState) return mini_map_camera_;
-    if(RenderingState == ShadowmapRenderState) return light_->ShadowmapCamera;
+    return camera_;
+    //if(RenderingState == MinimapRenderState) return mini_map_camera_;
+    //if(RenderingState == ShadowmapRenderState) return light_->ShadowmapCamera;
 }
 
-void Renderer::UpdateTransformData(Object3D::ConstantBufferTransformMatricies* TransformData)
+/*void Renderer::UpdateTransformData(Object3D::ConstantBufferTransformMatricies* TransformData)
 {
     
-}
-
-void Renderer::SetUpLightAndShadows(LightComponent* light)
-{
-    light_ = light;
-    light_->InitializeShadows();
-    main_shader_->SetLight(light_);
-}
+}*/
 
 
 

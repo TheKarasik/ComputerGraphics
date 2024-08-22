@@ -12,6 +12,7 @@ public:
     Mesh(Renderer* renderer, const DirectX::SimpleMath::Matrix& transformation = DirectX::SimpleMath::Matrix::Identity);
     void set_meshes(const MeshGeometry* mesh_geometries);
     void set_texture(Texture* texture);
+    Texture* texture() {return texture_;}
     //void set_parent(Object3D* parent) {Object3D::parent_ = parent;}
     bool PlayerControlled = false;
     DirectX::BoundingSphere* sphere;

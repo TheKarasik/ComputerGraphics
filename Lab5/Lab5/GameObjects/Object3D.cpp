@@ -3,7 +3,7 @@
 #include <random>
 
 #include "ConstantBuffer.h"
-
+#include "SimpleMath.h"
 
 Object3D::Object3D(Renderer* renderer, DirectX::SimpleMath::Matrix transformation, Object3D* parent) : Drawable(renderer),
     parent_(parent), world_transformation_matrix_(transformation)
@@ -41,6 +41,9 @@ void Object3D::moveRightLeft(float linear_step, float angular_step)
 
 void Object3D::update()
 {
+    renderer_->camera();
+    auto a = renderer_->camera()->view_matrix();
+    auto b = renderer_->camera()->perspective_matrix();
     transform_matricies_buffer_data.projection_view = renderer_->camera()->perspective_matrix().Transpose() * renderer_->camera()->view_matrix().Transpose();
 
     GenerateGlobalWorldMatrix();
@@ -49,7 +52,7 @@ void Object3D::update()
 
     DirectX::SimpleMath::Vector3 cam_pos = renderer_->camera()->position();
     transform_matricies_buffer_data.camera_position = DirectX::SimpleMath::Vector4(cam_pos.x, cam_pos.y, cam_pos.z, 1);
-    transform_matricies_buffer_data.RenderState = renderer_->RenderingState == MainRenderState;
+    //transform_matricies_buffer_data.RenderState = renderer_->RenderingState == MainRenderState;
     
     //constant_buffer_transform->UpdateBuffer(&transform_matricies_buffer_data);
 
@@ -59,8 +62,9 @@ void Object3D::update()
 
 void Object3D::draw()
 {
-    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->buffer());
-    renderer_->Context()->PSSetConstantBuffers(0, 1, constant_buffer_transform->buffer());
+    //Drawable::draw();
+    //renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->buffer());
+    //renderer_->Context()->PSSetConstantBuffers(0, 1, constant_buffer_transform->buffer());
 }
 
 int Object3D::GetParentLevel()

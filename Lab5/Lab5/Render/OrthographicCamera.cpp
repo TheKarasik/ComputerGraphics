@@ -12,12 +12,28 @@ OrthographicCamera::OrthographicCamera(DirectX::SimpleMath::Vector3 position,
     SetUpMatricies();
     //InputDevice::singleton->MouseMove.AddRaw(this, &CameraObject::RotateCamera);
 }
+
+OrthographicCamera::OrthographicCamera(DirectX::SimpleMath::Vector3 position, DirectX::SimpleMath::Vector3 direction,
+    DirectX::SimpleMath::Vector3 up_direction, float width, float height, float near_plane, float far_plane) : 
+    OrthographicCamera(position, direction, up_direction) 
+{
+    set_camera_props(width,height, near_plane, far_plane);
+}
+
 DirectX::SimpleMath::Matrix OrthographicCamera::ViewPerspectiveMatrix() const
 {
     return (view_matrix_*ortographic_matrix_);
     //return (view_matrix_*perspective_matrix_).Transpose();
     //return (perspective_matrix_*view_matrix_);
     //return (perspective_matrix_*view_matrix_).Transpose();
+}
+
+void OrthographicCamera::set_camera_props(float width, float height, float near_plane, float far_plane)
+{
+    width_ = width;
+    height_ = height;
+    near_ = near_plane;
+    far_ = far_plane;
 }
 
 void OrthographicCamera::update()

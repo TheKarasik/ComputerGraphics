@@ -11,9 +11,10 @@
 #include "PerspectiveCamera.h"
 #include "Structs.h"
 
-#define SHADOWMAP_WIDTH 1024
-#define SHADOWMAP_HEIGHT 1024
+#define SHADOWMAP_WIDTH 4096
+#define SHADOWMAP_HEIGHT 4096
 
+class ShadowmapShader;
 class MainShader;
 class Display32;
 class VertexShader;
@@ -33,6 +34,7 @@ public:
     Microsoft::WRL::ComPtr<ID3D11Device> device() {return device_;}
     ID3D11DeviceContext* Context() {return context_;}
     void Render();
+    void ProvideMeshData(Mesh* mesh);
     MainShader* main_shader() {return main_shader_;}
     PerspectiveCamera* camera();
     void SetUpLightAndShadows(LightComponent* light);
@@ -44,18 +46,16 @@ private:
     Display32& Display_;
     IDXGISwapChain* swapChain;
     MainShader* main_shader_;
-    ID3D11RenderTargetView* rtv_main;
+    //ShadowmapShader* shadowmap_shader_;
+    //ID3D11RenderTargetView* rtv_main;
     ID3D11RenderTargetView* rtv_mini_map;
-    VertexShader* vertex_shader_;
-    PixelShader* pixel_shader_;
-    ID3D11InputLayout* layout;
     ID3D11RasterizerState* rastState;
     PerspectiveCamera* camera_;
     MiniMapCamera* mini_map_camera_;
-    ID3D11DepthStencilView* dsv;
+    //D3D11DepthStencilView* dsv;
     ID3D11ShaderResourceView* srv_mini_map;
     ID3D11Texture2D* depth_stencil_buffer_;
     ID3D11Texture2D* mini_map_buffer_;
-    ID3D11DepthStencilState* depth_stencil_state_;
+    //ID3D11DepthStencilState* depth_stencil_state_;
     LightComponent* light_;
 };

@@ -28,13 +28,13 @@ Game::Game()
     camera_ = new PerspectiveCamera(DirectX::SimpleMath::Vector3(0, 1, -10),
         DirectX::SimpleMath::Vector3(0, sin(deg), cos(deg)), DirectX::SimpleMath::Vector3(0, cos(deg), -sin(deg)));
 
-    mini_map_camera_ = new MiniMapCamera(DirectX::SimpleMath::Vector3(0,50,0),
-        DirectX::SimpleMath::Vector3(0,-1,0), DirectX::SimpleMath::Vector3(0,0,1));
+    //mini_map_camera_ = new MiniMapCamera(DirectX::SimpleMath::Vector3(0,50,0),
+    //    DirectX::SimpleMath::Vector3(0,-1,0), DirectX::SimpleMath::Vector3(0,0,1));
     
     renderer_ = new Renderer(*display_, camera_);
     light = new LightComponent(renderer_);
     renderer_->SetUpLightAndShadows(light);
-    renderer_->SetMiniMapCamera(mini_map_camera_);
+    //renderer_->SetMiniMapCamera(mini_map_camera_);
     
     //Import Maxwell
     for (int i = 0; i<5; i++) ImportMaxwell();
@@ -59,7 +59,7 @@ Game::Game()
         m->add_rotation(DirectX::XMFLOAT3(0,1,0), Pi/2);
     }
     tpp = new ThirdPersonPlayer(sphere, camera_);
-    mini_map_camera_->SetPlayer(sphere);
+    //mini_map_camera_->SetPlayer(sphere);
 
     //Import Plane
     Importer3D importer_3d3 = Importer3D();

@@ -18,6 +18,8 @@ D:\Study\Computer Graphics\Lab5\Lab5\Render\OrthographicCamera.cpp;D:\Study\Comp
 D:\Study\Computer Graphics\Lab5\Lab5\Render\PixelShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\PixelShader.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Render\Renderer.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Renderer.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Render\Shader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Shader.obj
+D:\Study\Computer Graphics\Lab5\Lab5\Render\MainShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\MainShader.obj
+D:\Study\Computer Graphics\Lab5\Lab5\Render\ShadowmapShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\ShadowmapShader.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Render\Texture.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Texture.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Render\VertexBuffer.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\VertexBuffer.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Render\VertexShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\VertexShader.obj

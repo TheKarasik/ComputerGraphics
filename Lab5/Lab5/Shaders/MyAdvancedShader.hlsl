@@ -15,7 +15,7 @@ cbuffer ConstantBufferMatrixes : register( b0 )
     matrix World;  
     matrix ProjView;
     float4 CameraPos;
-    bool RenderState;
+    //bool RenderState;
 }
 
 struct Material
@@ -42,6 +42,7 @@ struct LightData
     matrix mViewProj;
     float4 directionWS;
     float4 color;
+    float4 position;
 };
 
 cbuffer ConstantBufferMaterial : register(b2)
@@ -104,22 +105,8 @@ PS_INPUT VSMain( VS_INPUT input )
 float4 PSMain( PS_INPUT input) : SV_Target
 {
     float4 col;
-    
-    //Рендер Shadowmap
-    if (RenderState == 1)
-    {
-        float depthValue = input.Pos.z / input.Pos.w;
-        return float4(depthValue, depthValue, depthValue, 1.0f);
-    }
-
-    //Рендер основной    
-    //return float4 (input.Norm, 1);
-    /*for(int i=0; i<2; i++)
-    {
-        finalColor += saturate( dot( (float3)vLightDir[i], input.Norm) * vLightColor[i] );
-    }*/
     float4 diffVal = txDiffuse.Sample( samLinear, input.Tex );
-    //diffVal.a = 1.0f;
+    diffVal.a = 1.0f;
     
     clip(diffVal.a - 0.01f);
     
@@ -143,31 +130,49 @@ float4 PSMain( PS_INPUT input) : SV_Target
     diffuse *= lit.diffuse;
     specular = lit.specular;
     specular *= material.specular_scale;
-    col = float4((ambient + diffuse + specular).rgb, 1);
+    col = float4((ambient + specular).rgb, 1);
+    //col = float4((ambient + diffuse + specular).rgb, 1);
 
     //Добавляем тени
-    // = mul( input.PosWS, mViewProj);
+    float bias = 0.001f;
     float2 projectTexCoord;
+    float4 lightViewPosition = mul(input.PosWS,light_data.mViewProj);
+    projectTexCoord.x =  lightViewPosition.x / lightViewPosition.w / 2.0f + 0.5f;
+    projectTexCoord.y = -lightViewPosition.y / lightViewPosition.w / 2.0f + 0.5f;
+    if((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
+    {
+        float depthValue = txShadowmap.Sample(samShadowmap, projectTexCoord).r;
+        float lightDepthValue = lightViewPosition.z / lightViewPosition.w;
+        lightDepthValue = lightDepthValue - bias;
+        if(lightDepthValue < depthValue)
+        {
+            float3 lightPos = light_data.position - input.PosWS;
+            lightPos = normalize(lightPos);
+            float lightIntensity = saturate(dot(input.Norm, lightPos));
+            if(lightIntensity > 0.0f)
+            {
+                //float4 difcol = float4(1.0f, 1.0f, 1.0f, 1.0f);;
+                col += (diffuse * lightIntensity);
+                //col = saturate(col);
+            }
+        }
+    }
+    
+    //col += float4((ambient + diffuse + specular).rgb, 1);
+    
+    // = mul( input.PosWS, mViewProj);
+    /*float2 projectTexCoord;
     projectTexCoord.x =  input.Pos.x / input.Pos.w / 2.0f + 0.5f;
     projectTexCoord.y = -input.Pos.y / input.Pos.w / 2.0f + 0.5f;
     if(saturate(projectTexCoord.x) == projectTexCoord.x && saturate(projectTexCoord.y) == projectTexCoord.y)
     {
         float depthValue = txShadowmap.Sample(samShadowmap, projectTexCoord).r;
         float lightDepthValue = input.Pos.z
-    }
+    }*/
     
     //Обработка мини карты
     //if(RenderState == 2) col = 0.2989 * col.x + 0.5870 * col.y + 0.1140 * col.z;
     
     return col;
     
-    //Обработка теней
-    
-
-    return col;
 }
-
-/*float4 PSSolid( PS_INPUT input) : SV_Target
-{
-    return vOutputColor;
-}*/

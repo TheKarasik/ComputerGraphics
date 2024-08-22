@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "Delegates.h"
 #include "Structs.h"
+#include "Display32.h"
 
 using namespace DirectX::SimpleMath;
 

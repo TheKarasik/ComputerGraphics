@@ -18,7 +18,7 @@ struct ConstantBufferTransformMatricies
     DirectX::SimpleMath::Matrix world;
     DirectX::SimpleMath::Matrix projection_view;
     DirectX::SimpleMath::Vector4 camera_position;
-    alignas (16) bool RenderState;
+    //alignas (16) bool RenderState;
 };
 
 struct MaterialProperties
@@ -35,6 +35,7 @@ struct LightDataStruct
     DirectX::SimpleMath::Matrix mViewProj;
     DirectX::SimpleMath::Vector4 directionWS;
     DirectX::SimpleMath::Vector4 color = DirectX::SimpleMath::Vector4(1,1,1,1);
+    DirectX::SimpleMath::Vector4 position;
 };
 
 /*struct TriangleVertex       //Old version
@@ -75,9 +76,10 @@ struct MouseMoveEventArgs
 
 enum RenderStateEnum
 {
-    MainRenderState = 0,
-    ShadowmapRenderState = 1,
-    MinimapRenderState = 2
+    NoRenderState = 0,
+    MainRenderState = 1,
+    ShadowmapRenderState = 2,
+    //MinimapRenderState = 2
 };
 
 /*struct RectangleGeometry

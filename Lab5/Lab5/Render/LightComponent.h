@@ -9,32 +9,28 @@
 
 class OrthographicCamera;
 class Renderer;
+class ShadowmapShader;
 
-class LightComponent : public Updatable
+class LightComponent
 {
 public:
     LightComponent(Renderer* renderer);
-    void update() override;
-    void SetUpMatricies();
-    void Activate();
-    void InitializeShadows();
-    Renderer* renderer_;
+    //void SetUpMatricies();
+    //void Activate();
     DirectX::SimpleMath::Matrix view_matrix_;
     DirectX::SimpleMath::Matrix ortographic_matrix_;
     DirectX::SimpleMath::Vector3 position_ = DirectX::SimpleMath::Vector3(0,30,0);
     DirectX::SimpleMath::Vector3 direction_ = DirectX::SimpleMath::Vector3(0,-1,0);
     DirectX::SimpleMath::Vector3 up_direction_ = DirectX::SimpleMath::Vector3(1,0,0);
+    /*DirectX::SimpleMath::Vector3 direction_ = DirectX::SimpleMath::Vector3(0.788,-0.788,0);
+    DirectX::SimpleMath::Vector3 up_direction_ = DirectX::SimpleMath::Vector3(0.788,0.788,0);*/
     float width_ = 800;
     float height_ = 800;
     float near_ = -100;
     float far_ = 100;
     LightDataStruct light_data;
+    Renderer* renderer_;
     //ConstantBuffer<LightDataStruct>* constant_buffer_light;
     OrthographicCamera* ShadowmapCamera;
-    ID3D11Texture2D* RTTextureShadow;
-    ID3D11Texture2D* DSTextureShadow;
-    ID3D11DepthStencilView* DSVShadow;
-    ID3D11RenderTargetView* RTVShadow;
-    ID3D11ShaderResourceView* SRVShadow;
-    ID3D11SamplerState* SamplerState;
+    ShadowmapShader* shadowmap_shader;
 };
