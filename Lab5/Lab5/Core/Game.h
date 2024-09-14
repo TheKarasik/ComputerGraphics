@@ -3,6 +3,7 @@
 #include "InputDevice.h"
 #include <chrono>
 #include "Importer3D.h"
+#include "PointLightComponent.h"
 
 //#include "Cube.h"
 
@@ -14,12 +15,14 @@
 
 #define S_PER_UPDATE 0.016
 
+class DirectionalLightComponent;
+class SpotLightComponent;
 class MiniMapCamera;
 class OrthographicCamera;
 class LightComponent;
 class ThirdPersonPlayer;
 class Object3D;
-class Texture;
+class FileTexture;
 class Renderer;
 class PerspectiveCamera;
 
@@ -37,14 +40,17 @@ private:
     void ProcessInput();
     void CleanUp();
     void ImportMaxwell();
-    LightComponent* light;
+    PointLightComponent* point_light;
+    SpotLightComponent* spot_light;
+    DirectionalLightComponent* directional_light;
+    DirectionalLightComponent* directional_light2;
     ThirdPersonPlayer* tpp;
     std::vector<Mesh*> meshes_;
     std::vector<Mesh*> pick_ups;
     Mesh* sphere;
     Mesh* plane;
-    Texture* body_texture;
-    Texture* whiskers_texture;
+    FileTexture* body_texture;
+    FileTexture* whiskers_texture;
     PerspectiveCamera* camera_;
     //MiniMapCamera* mini_map_camera_;
     Renderer* renderer_;

@@ -137,3 +137,20 @@ void Importer3D::print_matrix(aiMatrix4x4 m)
     
 }
 
+/*void Importer3D::FlipNormals()
+{
+    for (const auto mwt : mwt_vector_)
+    {
+        for (const auto mat : mwt.meshes_and_triangles)
+        {
+            for (const auto geom : mat->mesh_geom())
+            {
+                for (auto v : geom->vertecies)
+                {
+                    v.normal = DirectX::XMFLOAT3(-v.normal.x, -v.normal.y, -v.normal.z);
+                }
+            }
+        }
+    }
+}*/
+

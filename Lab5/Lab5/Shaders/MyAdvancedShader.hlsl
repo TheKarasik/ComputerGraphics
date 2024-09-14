@@ -20,6 +20,7 @@ cbuffer ConstantBufferMatrixes : register( b0 )
 
 struct Material
 {
+    //float4 ambient_color;
     float4 global_ambient;
     float4 specular_color;
     float specular_power;
@@ -39,10 +40,14 @@ cbuffer ConstantBufferMaterial : register(b1)
 }
 struct LightData
 {        
-    matrix mViewProj;
+    float4 positionWS;
     float4 directionWS;
     float4 color;
-    float4 position;
+    matrix mView;
+    float SpotlightAngle;
+    float Range;
+    float Intensity;
+    unsigned int Type;
 };
 
 cbuffer ConstantBufferMaterial : register(b2)
@@ -110,10 +115,11 @@ float4 PSMain( PS_INPUT input) : SV_Target
     
     clip(diffVal.a - 0.01f);
     
+    //float4 ambient = material.ambient_color * material.global_ambient;
     float4 ambient = diffVal * material.global_ambient;
     float4 diffuse = diffVal;
     float4 specular;
-    ambient *= diffVal;
+    //ambient *= diffVal;
     float4 N = normalize(float4(input.Norm, 0.0f));
 
     LightingResult lit;
@@ -136,7 +142,7 @@ float4 PSMain( PS_INPUT input) : SV_Target
     //Добавляем тени
     float bias = 0.001f;
     float2 projectTexCoord;
-    float4 lightViewPosition = mul(input.PosWS,light_data.mViewProj);
+    float4 lightViewPosition = mul(input.PosWS,light_data.mView);
     projectTexCoord.x =  lightViewPosition.x / lightViewPosition.w / 2.0f + 0.5f;
     projectTexCoord.y = -lightViewPosition.y / lightViewPosition.w / 2.0f + 0.5f;
     if((saturate(projectTexCoord.x) == projectTexCoord.x) && (saturate(projectTexCoord.y) == projectTexCoord.y))
@@ -146,7 +152,7 @@ float4 PSMain( PS_INPUT input) : SV_Target
         lightDepthValue = lightDepthValue - bias;
         if(lightDepthValue < depthValue)
         {
-            float3 lightPos = light_data.position - input.PosWS;
+            float3 lightPos = light_data.positionWS - input.PosWS;
             lightPos = normalize(lightPos);
             float lightIntensity = saturate(dot(input.Norm, lightPos));
             if(lightIntensity > 0.0f)

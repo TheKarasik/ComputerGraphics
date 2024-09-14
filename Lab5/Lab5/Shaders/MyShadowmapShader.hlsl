@@ -1,6 +1,9 @@
 cbuffer ConstantBufferMatrixes : register( b0 )
 {
-    matrix WorldProjView;
+    matrix World;  
+    matrix View;
+    matrix Proj;
+    float4 CameraPos;
 }
 
 struct VS_INPUT                   
@@ -10,24 +13,17 @@ struct VS_INPUT
 
 struct PS_INPUT                   
 {
-    float4 Pos : SV_POSITION;    
-    float4 PosDepth : TEXTURE0;  
+    float4 Pos : SV_POSITION;     
 };
 
 PS_INPUT VSMain( VS_INPUT input )
 {
     PS_INPUT output;
     input.Pos.w = 1.0f;
-    output.Pos = mul(input.Pos, WorldProjView);
+    output.Pos = mul(float4(input.Pos.xyz, 1), World);
+    output.Pos = mul(output.Pos, View);
+    output.Pos = mul(output.Pos, Proj);
     // Пишем позицию в depthPosition
-    output.PosDepth = output.Pos;
 	
     return output;
-}
-
-float4 PSMain( PS_INPUT input) : SV_Target
-{
-    float depthValue = input.PosDepth.z / input.PosDepth.w;
-
-    return float4(depthValue, depthValue, depthValue, 1.0f);
 }

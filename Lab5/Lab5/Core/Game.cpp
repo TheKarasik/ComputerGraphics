@@ -7,17 +7,22 @@
 //#include "Platform.h"
 #include <random>
 
+#include "DirectionalLightComponent.h"
 #include "Renderer.h"
 #include "PerspectiveCamera.h"
 #include "LightComponent.h"
 #include "Mesh.h"
 #include "MiniMapCamera.h"
 #include "OrthographicCamera.h"
-#include "Texture.h"
+#include "FileTexture.h"
+#include "PointLightComponent.h"
+#include "SpotLightComponent.h"
 #include "ThirdPersonPlayer.h"
+//#include "DirectionalLightComponent.h"
 
 std::vector<Controllable*> Controllable::changing_objects;
 std::vector<Updatable*> Updatable::changing_objects;
+//std::vector<DirectionalLightComponent*> DirectionalLights_; 
 
 Game::Game()
 {
@@ -25,16 +30,29 @@ Game::Game()
     input_ = new InputDevice(this);
     
     float deg = 3.14/180*0;
-    camera_ = new PerspectiveCamera(DirectX::SimpleMath::Vector3(0, 1, -10),
+    camera_ = new PerspectiveCamera(DirectX::SimpleMath::Vector3(0, 1, 0),
         DirectX::SimpleMath::Vector3(0, sin(deg), cos(deg)), DirectX::SimpleMath::Vector3(0, cos(deg), -sin(deg)));
 
     //mini_map_camera_ = new MiniMapCamera(DirectX::SimpleMath::Vector3(0,50,0),
     //    DirectX::SimpleMath::Vector3(0,-1,0), DirectX::SimpleMath::Vector3(0,0,1));
     
     renderer_ = new Renderer(*display_, camera_);
-    light = new LightComponent(renderer_);
-    renderer_->SetUpLightAndShadows(light);
-    //renderer_->SetMiniMapCamera(mini_map_camera_);
+    
+    /*point_light = new PointLightComponent(renderer_);
+    point_light->SetPosition(DirectX::SimpleMath::Vector3( 0, 2, 10));
+    point_light->SetColor(DirectX::SimpleMath::Vector4(0,0,1,1));
+    point_light->SetRange(7);
+
+    spot_light = new SpotLightComponent(renderer_);
+    spot_light->SetPosition(DirectX::SimpleMath::Vector3( -10, 10, 0));
+    spot_light->SetDirection(DirectX::SimpleMath::Vector3(1,-1,0));
+    spot_light->SetColor(DirectX::SimpleMath::Vector4(1,0,0,1));
+    spot_light->SetRange(50);*/
+
+    directional_light = new DirectionalLightComponent(renderer_);
+    directional_light->SetDirection(DirectX::SimpleMath::Vector3(0,-1,0));
+    directional_light->SetIntensity(1.0f);
+    directional_light->SetColor(DirectX::SimpleMath::Vector4(1,1,1,1));
     
     //Import Maxwell
     for (int i = 0; i<5; i++) ImportMaxwell();
@@ -44,15 +62,17 @@ Game::Game()
     if (importer_3d2.DoTheImportThing("Models/source/GofmanSphere.fbx"))
     {
         std::vector<Mesh*> imported_meshes = importer_3d2.GetMeshes(renderer_);
-        body_texture = new Texture(renderer_, L"Models/textures/Gofman.jpg");
+        body_texture = new FileTexture(renderer_, L"Models/textures/Gofman.jpg");
         imported_meshes[0]->set_texture(body_texture);
-        imported_meshes[0]->set_location(DirectX::XMFLOAT3(0,2,-12));
+        imported_meshes[0]->set_location(DirectX::XMFLOAT3(0,2,-0));
+        imported_meshes[0]->set_scale(DirectX::SimpleMath::Vector3(1,1,1));
         meshes_.insert(meshes_.end(), imported_meshes.begin(), imported_meshes.end());
         sphere = imported_meshes[0];
+        //sphere->set_scale(DirectX::XMFLOAT3(1000,1000,1000));
         sphere->set_scale(DirectX::XMFLOAT3(2,2,2));
         sphere->set_bounding_sphere();
         sphere->pick_ups = pick_ups;
-        //tpp = new ThirdPersonPlayer(sphere, camera_);
+        tpp = new ThirdPersonPlayer(sphere, camera_);
     }
     for (const auto m : meshes_)
     {
@@ -66,14 +86,19 @@ Game::Game()
     if (importer_3d3.DoTheImportThing("Models/source/ErrorPlane.fbx"))
     {
         std::vector<Mesh*> imported_meshes = importer_3d3.GetMeshes(renderer_);
-        body_texture = new Texture(renderer_, L"Models/textures/error.jpg");
+        body_texture = new FileTexture(renderer_, L"Models/textures/error.jpg");
         imported_meshes[0]->set_texture(body_texture);
         imported_meshes[0]->set_scale(DirectX::XMFLOAT3(50,50,50));
         meshes_.insert(meshes_.end(), imported_meshes.begin(), imported_meshes.end());
         plane = imported_meshes[0];
+        //plane->flip_normals();
+        //plane->add_rotation(DirectX::SimpleMath::Vector3(1,0,0), Pi);
     }
-
     
+    /*for (const auto m : meshes_)
+    {
+        m->set_scale(DirectX::SimpleMath::Vector3(10,10,10));
+    }*/
 }
 void Game::GameLoop()
 {
@@ -137,7 +162,7 @@ void Game::ImportMaxwell()
     {
         std::vector<Mesh*> imported_meshes = importer_3d1.GetMeshes(renderer_);
         //meshes_[0]->set_parent(meshes_[1]);
-        body_texture = new Texture(renderer_, L"Models/textures/dingus_nowhiskers.jpg");
+        body_texture = new FileTexture(renderer_, L"Models/textures/dingus_nowhiskers.jpg");
         imported_meshes[0]->set_texture(body_texture);
         imported_meshes[0]->set_scale(DirectX::XMFLOAT3(0.1, 0.1, 0.1));
         

@@ -13,7 +13,11 @@
 #include "ConstantBuffer.h"
 #include "Display32.h"
 #include "AbstractBuffer.h"
+#include "CascadeShadowmapShader.h"
+#include "DirectionalLightComponent.h"
+#include "GBufferShader.h"
 #include "LightComponent.h"
+#include "LightingStageShader.h"
 #include "MainShader.h"
 #include "MiniMapCamera.h"
 #include "OrthographicCamera.h"
@@ -60,8 +64,14 @@ Renderer::Renderer(Display32& Display, PerspectiveCamera* camera) : Display_(Dis
     {
         // Well, that was unexpected
     }
-
-    main_shader_ = new MainShader(this, swapChain, device_, Display_);
+    
+    ID3D11Texture2D* backTex;
+    res = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backTex);	// __uuidof(ID3D11Texture2D)
+    res = device_->CreateRenderTargetView(backTex, nullptr, &rtv_main);
+    
+    //main_shader_ = new MainShader(this, swapChain, device_, Display_);
+    gbuffer_shader_ = new GBufferShader(this, &Display_);
+    lighting_stage_shader_ = new LightingStageShader(this, gbuffer_shader_, &Display_);
     
     //Mini map creation
 
@@ -98,16 +108,6 @@ Renderer::Renderer(Display32& Display, PerspectiveCamera* camera) : Display_(Dis
     
 }
 
-
-
-void Renderer::SetUpLightAndShadows(LightComponent* light)
-{
-    light_ = light;
-    //light_->InitializeShadows();
-    main_shader_->ProvideLightData(light);
-    light_->shadowmap_shader->ProvideLightData(light);
-}
-
 Renderer::~Renderer()
 {
     context_->ClearState();
@@ -120,29 +120,42 @@ Renderer::~Renderer()
     device()->Release();
 }
 
+void Renderer::DrawEverything()
+{
+    for(auto vo : Drawable::visual_objects)
+    {
+        (*vo).draw();
+    }
+}
+
 void Renderer::Render()
 {
-    //Рендер сцены для ShadowMap
-    RenderingState = ShadowmapRenderState;
-    //for (auto co : Updatable::changing_objects) co->update(); //!!!ВОЗМОЖНО ПРИДЁТСЯ РАСКОММЕНТИРОВАТЬ!!!
-    light_->shadowmap_shader->Activate();
-    //light_->Activate();
-    for(auto vo : Drawable::visual_objects)
+    //Рендер сцены для Cascade ShadowMap
+    if (DirectionalLightComponent::GetDirectionalLight())
     {
-        (*vo).draw();
+        RenderingState = CascadeShadowmapRenderState;
+        DirectionalLightComponent::GetDirectionalLight()->cascade_shadowmap_shader()->Activate();
     }
     
-    //swapChain->Present(1, /*DXGI_PRESENT_DO_NOT_WAIT*/ 0);
+    //Рендер сцены для ShadowMap
+    /*if (DirectionalLightComponent::GetDirectionalLight())
+    {
+        RenderingState = ShadowmapRenderState;
+        DirectionalLightComponent::GetDirectionalLight()->shadowmap_shader()->Activate();
+    }*/
+    
+    //Рендер сцены для GBuffer
+    RenderingState = GBufferRenderState;
+    gbuffer_shader_->Activate();
+
+    //Рендер сцены для LightStage
+    RenderingState = LightingStageState;
+    lighting_stage_shader_->Activate();
     
     //Рендер сцены для игрока
-    //for (auto co : Updatable::changing_objects) co->update(); //!!!ВОЗМОЖНО ПРИДЁТСЯ РАСКОММЕНТИРОВАТЬ!!!
     
-    RenderingState = MainRenderState;
-    main_shader_->Activate();
-    for(auto vo : Drawable::visual_objects)
-    {
-        (*vo).draw();
-    }
+    //RenderingState = MainRenderState;
+    //main_shader_->Activate();
     
     //Рендер мини карты
     /*RenderingState = MinimapRenderState;
@@ -176,17 +189,26 @@ void Renderer::ProvideMeshData(Mesh* mesh)
     case MainRenderState:
         main_shader_->ProvideMeshData(mesh);
         break;
+    case CascadeShadowmapRenderState:
+        DirectionalLightComponent::GetDirectionalLight()->cascade_shadowmap_shader()->ProvideMeshData(mesh);
+        break;
     case ShadowmapRenderState:
-        light_->shadowmap_shader->ProvideMeshData(mesh);
+        DirectionalLightComponent::GetDirectionalLight()->shadowmap_shader()->ProvideMeshData(mesh);
+        break;
+    case GBufferRenderState:
+        gbuffer_shader_->ProvideMeshData(mesh);
+        break;
+    case LightingStageState:
+        lighting_stage_shader_->ProvideMeshData(mesh);
         break;
     }
 }
 
 PerspectiveCamera* Renderer::camera()
 {
+    //if(RenderingState == ShadowmapRenderState) return DirectionalLightComponent::GetDirectionalLight()->Camera();
     return camera_;
     //if(RenderingState == MinimapRenderState) return mini_map_camera_;
-    //if(RenderingState == ShadowmapRenderState) return light_->ShadowmapCamera;
 }
 
 /*void Renderer::UpdateTransformData(Object3D::ConstantBufferTransformMatricies* TransformData)

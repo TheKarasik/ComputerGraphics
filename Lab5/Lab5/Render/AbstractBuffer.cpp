@@ -17,8 +17,8 @@ void AbstractBuffer::CreateBuffer()
     buffer_desc_.Usage = usage_;
     buffer_desc_.BindFlags = buffer_type_;
     buffer_desc_.CPUAccessFlags = CPU_acess_flag_;
-    buffer_desc_.MiscFlags = 0;
-    buffer_desc_.StructureByteStride = 0;
+    buffer_desc_.MiscFlags = misc_flag_;
+    buffer_desc_.StructureByteStride = structured_byte_stride_;
     buffer_desc_.ByteWidth = bytewidth_;
     if (!raw_data_)
     {
@@ -26,7 +26,7 @@ void AbstractBuffer::CreateBuffer()
         renderer_->device()->CreateBuffer(&buffer_desc_, nullptr, &buffer_);
         return;
     }
-    data_.pSysMem = raw_data_;
+    data_.pSysMem = raw_data_; 
     data_.SysMemPitch = 0;
     data_.SysMemSlicePitch = 0;
     

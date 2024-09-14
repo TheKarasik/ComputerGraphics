@@ -21,6 +21,8 @@ protected:
 
     D3D11_USAGE usage_;
     D3D11_BIND_FLAG buffer_type_;
+    UINT structured_byte_stride_ = 0;
+    UINT misc_flag_ = 0;
     UINT CPU_acess_flag_ = 0;
     UINT bytewidth_;
     void* raw_data_;

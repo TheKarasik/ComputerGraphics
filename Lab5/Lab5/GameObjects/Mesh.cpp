@@ -4,15 +4,18 @@
 #include <set>
 
 #include "IndexBuffer.h"
-#include "Texture.h"
+#include "FileTexture.h"
 #include "Triangle.h"
 #include "VertexBuffer.h"
 #include "Structs.h"
 
 Mesh::Mesh(Renderer* renderer, const DirectX::SimpleMath::Matrix& transformation)
-    : Object3D(renderer, transformation) {}
+    : Object3D(renderer, transformation)
+{
+    //update();
+}
 
-void Mesh::set_meshes(const MeshGeometry* mesh_geometries)
+void Mesh::set_meshes(MeshGeometry* mesh_geometries)
 {
     vertecies = mesh_geometries->vertecies.data();
     indecies = mesh_geometries->indicies.data();
@@ -53,14 +56,24 @@ void Mesh::set_meshes(const MeshGeometry* mesh_geometries)
     strides = sizeof TriangleVertex;
 }
 
-void Mesh::set_texture(Texture* texture)
+void Mesh::set_texture(FileTexture* texture)
 {
     texture_ = texture;
+}
+
+void Mesh::flip_normals()
+{
+    for (int i = 0; i < indiciesNum; i++)
+    {
+        vertecies[i].normal = DirectX::XMFLOAT3(-vertecies[i].normal.x, -vertecies[i].normal.y, -vertecies[i].normal.z);
+    }
 }
 
 void Mesh::draw()
 {
     Object3D::draw();
+    
+    if (!IsDrawable) return;
 
     renderer_->ProvideMeshData(this);
 

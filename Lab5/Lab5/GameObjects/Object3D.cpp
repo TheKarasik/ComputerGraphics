@@ -43,8 +43,9 @@ void Object3D::update()
 {
     renderer_->camera();
     auto a = renderer_->camera()->view_matrix();
-    auto b = renderer_->camera()->perspective_matrix();
-    transform_matricies_buffer_data.projection_view = renderer_->camera()->perspective_matrix().Transpose() * renderer_->camera()->view_matrix().Transpose();
+    auto b = renderer_->camera()->projection_matrix();
+    transform_matricies_buffer_data.projection = renderer_->camera()->projection_matrix().Transpose();
+    transform_matricies_buffer_data.view = renderer_->camera()->view_matrix().Transpose();
 
     GenerateGlobalWorldMatrix();
 
@@ -60,7 +61,7 @@ void Object3D::update()
     GenerateWorldMatricies();
 }
 
-void Object3D::draw()
+ void Object3D::draw()
 {
     //Drawable::draw();
     //renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->buffer());

@@ -2,7 +2,16 @@
 #include <DirectXMath.h>
 #include "vector"
 #define Pi 3.1415926535f
+#define CASCADE_COUNT 4
 
+
+struct CascadeData
+{
+    DirectX::SimpleMath::Matrix viewProjMats[CASCADE_COUNT];
+    /*DirectX::SimpleMath::Matrix viewMats[CASCADE_COUNT];
+    DirectX::SimpleMath::Matrix projMats[CASCADE_COUNT];*/
+    float distances[CASCADE_COUNT];
+};
 
 struct TriangleVertex     //New version
 {
@@ -13,16 +22,23 @@ struct TriangleVertex     //New version
     DirectX::XMFLOAT3 normal;
 };
 
+struct StructuredBufferSize
+{
+    alignas(16) UINT size;
+};
+
 struct ConstantBufferTransformMatricies
 {
     DirectX::SimpleMath::Matrix world;
-    DirectX::SimpleMath::Matrix projection_view;
+    DirectX::SimpleMath::Matrix view;
+    DirectX::SimpleMath::Matrix projection;
     DirectX::SimpleMath::Vector4 camera_position;
     //alignas (16) bool RenderState;
 };
 
-struct MaterialProperties
+struct MaterialStructCB
 {
+    //DirectX::SimpleMath::Vector4 ambient_color = DirectX::SimpleMath::Vector4(0.5f);
     DirectX::SimpleMath::Vector4 global_ambient = DirectX::SimpleMath::Vector4(0.2f);
     DirectX::SimpleMath::Vector4 specular_color = DirectX::SimpleMath::Vector4::One;
     float specular_power = 50.0f;
@@ -30,12 +46,41 @@ struct MaterialProperties
     DirectX::SimpleMath::Vector2 padding;
 };
 
-struct LightDataStruct
+struct ScrenToViewStructCB
 {
-    DirectX::SimpleMath::Matrix mViewProj;
-    DirectX::SimpleMath::Vector4 directionWS;
-    DirectX::SimpleMath::Vector4 color = DirectX::SimpleMath::Vector4(1,1,1,1);
-    DirectX::SimpleMath::Vector4 position;
+    DirectX::SimpleMath::Matrix inverse_projection;
+    alignas(16) DirectX::SimpleMath::Vector2 screen_dimensions;
+};
+
+enum LightType : unsigned int
+{
+    SpotLight = 0,
+    PointLight = 1,
+    DirectionalLight = 2
+};
+
+struct DirectionalLightDataStruct
+{
+    DirectX::SimpleMath::Matrix mView;
+    DirectX::SimpleMath::Matrix mProj;
+    DirectX::SimpleMath::Vector4 PositionWS;
+    DirectX::SimpleMath::Vector4 DirectionWS;
+    DirectX::SimpleMath::Vector4 DirectionVS;
+    DirectX::SimpleMath::Vector4 Color;
+    alignas(16) float Intensity;
+};
+
+struct LightDataStruct 
+{
+    DirectX::SimpleMath::Vector4 PositionWS;
+    DirectX::SimpleMath::Vector4 DirectionWS;
+    DirectX::SimpleMath::Vector4 PositionVS;
+    DirectX::SimpleMath::Vector4 DirectionVS;
+    DirectX::SimpleMath::Vector4 Color;
+    float SpotlightAngle;
+    float Range;
+    float Intensity;
+    LightType Type;
 };
 
 /*struct TriangleVertex       //Old version
@@ -73,12 +118,14 @@ struct MouseMoveEventArgs
     int WheelDelta;
 };
 
-
 enum RenderStateEnum
 {
     NoRenderState = 0,
     MainRenderState = 1,
     ShadowmapRenderState = 2,
+    CascadeShadowmapRenderState = 3,
+    GBufferRenderState = 4,
+    LightingStageState = 5,
     //MinimapRenderState = 2
 };
 
