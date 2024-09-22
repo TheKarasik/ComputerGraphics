@@ -1,9 +1,6 @@
 ﻿#include "OrthographicCamera.h"
 
 #include "Frustrum.h"
-#include "InputDevice.h"
-#include "Mesh.h"
-#include "Structs.h"
 
 OrthographicCamera::OrthographicCamera(DirectX::SimpleMath::Vector3 position,
                            DirectX::SimpleMath::Vector3 direction,

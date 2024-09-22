@@ -2,6 +2,7 @@
 
 #include "DirectionalLightComponent.h"
 #include "PerspectiveCamera.h"
+#include "Structs.h"
 
 Frustrum::Frustrum(PerspectiveCamera* camera) : camera_(camera)
 {
@@ -102,11 +103,11 @@ DirectX::SimpleMath::Matrix Frustrum::CalculateLightProj(DirectX::SimpleMath::Ma
         const auto trf = DirectX::SimpleMath::Vector4::Transform(v, ParentsLightView);
         frustrumCornersLS.push_back(trf);
         //const auto trf = v;
-        minX = std::min(minX, trf.x);
+        minX = min(minX, trf.x);
         maxX = max(maxX, trf.x);
-        minY = std::min(minY, trf.y);
+        minY = min(minY, trf.y);
         maxY = max(maxY, trf.y);
-        minZ = std::min(minZ, trf.z);
+        minZ = min(minZ, trf.z);
         maxZ = max(maxZ, trf.z);
     }
 

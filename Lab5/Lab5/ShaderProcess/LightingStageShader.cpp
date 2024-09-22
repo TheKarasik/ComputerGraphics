@@ -1,9 +1,11 @@
 ﻿#include "LightingStageShader.h"
 
+#include "Display32.h"
 #include "FileTexture.h"
 #include "GBufferShader.h"
 #include "LightComponent.h"
 #include "Mesh.h"
+#include "PerspectiveCamera.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 
@@ -188,7 +190,7 @@ void LightingStageShader::Activate()
     ScrenToView.inverse_projection = renderer_->camera()->projection_matrix().Transpose().Invert();
     ScrenToView.screen_dimensions = ScreenDimensions;
     ScreenToViewCB->UpdateBuffer(&ScrenToView);
-    renderer_->Context()->PSSetConstantBuffers(0, 1, ScreenToViewCB->buffer());
+    renderer_->Context()->PSSetConstantBuffers(0, 1, ScreenToViewCB->p_buffer());
 
     renderer_->Context()->ClearDepthStencilView(DSV, /*D3D11_CLEAR_DEPTH|*/D3D11_CLEAR_STENCIL, 0, 1);
     //Unmark pixels
@@ -237,11 +239,11 @@ void LightingStageShader::Activate()
 void LightingStageShader::ProvideLightData(LightComponent* Light)
 {
     LightDataCB->UpdateBuffer(Light->LightData());
-    renderer_->Context()->PSSetConstantBuffers(1, 1, LightDataCB->buffer());
+    renderer_->Context()->PSSetConstantBuffers(1, 1, LightDataCB->p_buffer());
 }
 
 void LightingStageShader::ProvideMeshData(Mesh* mesh)
 {
-    constant_buffer_transform->UpdateBuffer(&mesh->transform_matricies_buffer_data);
-    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->buffer());
+    constant_buffer_transform->UpdateBuffer(mesh->transform_matricies_buffer_data);
+    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->p_buffer());
 }

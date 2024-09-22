@@ -2,7 +2,6 @@
 #include <SimpleMath.h>
 
 //#include "ConstantBuffer.h"
-#include "Structs.h"
 #include "d3d11.h"
 #include "Updatable.h"
 
@@ -12,6 +11,7 @@ class LightVolume;
 class OrthographicCamera;
 class Renderer;
 class ShadowmapShader;
+class LightDataStruct;
 
 class LightComponent : public Updatable
 {
@@ -21,14 +21,14 @@ public:
     void update() override;
     virtual void SetPosition(DirectX::SimpleMath::Vector3 new_position);
     virtual void SetDirection(DirectX::SimpleMath::Vector3 DirectionVector);
-    virtual void SetColor(DirectX::SimpleMath::Vector4 color) {light_data.Color = color;}
+    virtual void SetColor(DirectX::SimpleMath::Vector4 color); /*{light_data->Color = color;}*/
     virtual void SetSpotlightAngle(float SpotlightAngle); 
     virtual void SetRange(float Range); 
-    virtual void SetIntensity(float Intensity) {light_data.Intensity = Intensity;}
+    virtual void SetIntensity(float Intensity); /*{light_data->Intensity = Intensity;}*/
     //void SetType(LightType Type);
     void SetUpVSVectors();
     DirectX::SimpleMath::Vector4 up_direction() {return up_direction_;}
-    LightDataStruct* LightData() {return &light_data;}
+    LightDataStruct* LightData() {return light_data;}
     Mesh* Volume() {return volume_;}
     //void Activate();
     
@@ -47,7 +47,7 @@ public:
 protected:
     Renderer* renderer_;
     Mesh* volume_ = nullptr;
-    LightDataStruct light_data;
+    LightDataStruct* light_data;
     DirectX::SimpleMath::Vector4 up_direction_;
 private:
     

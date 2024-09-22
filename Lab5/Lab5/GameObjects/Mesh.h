@@ -1,10 +1,14 @@
 ﻿#pragma once
+#include <SimpleMath.h>
+
 #include "Object3D.h"
 #include <WICTextureLoader.h>
 
+class AbstractBuffer;
+struct TriangleVertex;
 class FileTexture;
 class Triangle;
-class MeshGeometry;
+struct MeshGeometry;
 
 class Mesh : public Object3D
 {

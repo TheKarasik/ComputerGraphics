@@ -21,6 +21,7 @@
 #include "MainShader.h"
 #include "MiniMapCamera.h"
 #include "OrthographicCamera.h"
+#include "ParticleSystem.h"
 #include "ShadowmapShader.h"
 
 std::vector<Drawable*> Drawable::visual_objects;
@@ -72,6 +73,11 @@ Renderer::Renderer(Display32& Display, PerspectiveCamera* camera) : Display_(Dis
     //main_shader_ = new MainShader(this, swapChain, device_, Display_);
     gbuffer_shader_ = new GBufferShader(this, &Display_);
     lighting_stage_shader_ = new LightingStageShader(this, gbuffer_shader_, &Display_);
+
+    gbuffer_shader_->ProvideParticles(&particle_systems_);
+    
+    /*particle_system_ = new ParticleSystem(100, DirectX::SimpleMath::Vector3(0,0,0), this);
+    particle_system_->initialize_system();*/
     
     //Mini map creation
 
@@ -130,6 +136,8 @@ void Renderer::DrawEverything()
 
 void Renderer::Render()
 {
+    //particle_system_->render();
+    
     //Рендер сцены для Cascade ShadowMap
     if (DirectionalLightComponent::GetDirectionalLight())
     {
@@ -151,6 +159,11 @@ void Renderer::Render()
     //Рендер сцены для LightStage
     RenderingState = LightingStageState;
     lighting_stage_shader_->Activate();
+
+    /*for(const auto ps : particle_systems_)
+    {
+        ps->draw();
+    }*/
     
     //Рендер сцены для игрока
     

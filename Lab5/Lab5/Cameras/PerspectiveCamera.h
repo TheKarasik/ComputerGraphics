@@ -1,10 +1,11 @@
 #pragma once
 #include <SimpleMath.h>
 
-#include "Controllable.h"
-#include "Structs.h"
-#include "Updatable.h"
 
+#include "Updatable.h"
+#define Pi 3.1415926535f
+
+struct CascadeData;
 class Frustrum;
 struct MouseMoveEventArgs;
 

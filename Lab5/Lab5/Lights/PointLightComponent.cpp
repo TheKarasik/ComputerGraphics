@@ -13,16 +13,16 @@ PointLightComponent::PointLightComponent(Renderer* renderer) : LightComponent(re
         //volume_->set_location(DirectX::SimpleMath::Vector3(0,0,0));
         volume_->set_drawability(false);
     }
-    light_data.PositionWS = light_data.PositionWS + DirectX::SimpleMath::Vector3(light_data.Range, 0, 0);
-    light_data.Type = PointLight;
+    light_data->PositionWS = light_data->PositionWS + DirectX::SimpleMath::Vector3(light_data->Range, 0, 0);
+    light_data->Type = PointLight;
 
     Lights.push_back(this);
 }
 
 void PointLightComponent::SetRange(float Range)
 {
-    DirectX::SimpleMath::Vector3 v3 = DirectX::SimpleMath::Vector3(light_data.PositionWS.x, light_data.PositionWS.y, light_data.PositionWS.z);
-    float RangeMultiplier = Range/light_data.Range;
+    DirectX::SimpleMath::Vector3 v3 = DirectX::SimpleMath::Vector3(light_data->PositionWS.x, light_data->PositionWS.y, light_data->PositionWS.z);
+    float RangeMultiplier = Range/light_data->Range;
     volume_->set_scale(DirectX::SimpleMath::Vector3(RangeMultiplier, RangeMultiplier, RangeMultiplier));
     //volume_->set_location(v3 - DirectX::SimpleMath::Vector3(0, RangeMultiplier, 0));
     volume_->set_location(v3);

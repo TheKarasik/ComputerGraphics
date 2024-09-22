@@ -5,6 +5,7 @@
 #include "OrthographicCamera.h"
 #include "Renderer.h"
 #include "ShadowmapShader.h"
+#include "Structs.h"
 
 LightComponent::LightComponent(Renderer* renderer)
 {
@@ -12,15 +13,16 @@ LightComponent::LightComponent(Renderer* renderer)
     up_direction_ = DirectX::SimpleMath::Vector4(0, 1, 0, 0);
     
     //SetUpMatricies();
+    light_data = new LightDataStruct();
     
-    light_data.PositionWS = DirectX::SimpleMath::Vector4(0, 0, 0, 1);
-    light_data.DirectionWS = DirectX::SimpleMath::Vector4(1, 0, 0, 0);
+    light_data->PositionWS = DirectX::SimpleMath::Vector4(0, 0, 0, 1);
+    light_data->DirectionWS = DirectX::SimpleMath::Vector4(1, 0, 0, 0);
     SetUpVSVectors();
-    light_data.Color = DirectX::SimpleMath::Vector4(1, 1, 1, 1);
-    light_data.SpotlightAngle = 45;
-    light_data.Range = 1;
-    light_data.Intensity = 1;
-    light_data.Type = DirectionalLight;
+    light_data->Color = DirectX::SimpleMath::Vector4(1, 1, 1, 1);
+    light_data->SpotlightAngle = 45;
+    light_data->Range = 1;
+    light_data->Intensity = 1;
+    light_data->Type = DirectionalLight;
     
     //ShadowmapCamera->set_camera_props(width_,height_, near_, far_);
     //SetUpMatricies();
@@ -44,7 +46,7 @@ void LightComponent::update()
 
 void LightComponent::SetPosition(DirectX::SimpleMath::Vector3 new_position)
 {
-    light_data.PositionWS = DirectX::SimpleMath::Vector4(new_position.x, new_position.y, new_position.z, 1);
+    light_data->PositionWS = DirectX::SimpleMath::Vector4(new_position.x, new_position.y, new_position.z, 1);
     if (LightData()->Type != DirectionalLight)
         volume_->set_location(new_position);
     SetUpVSVectors(); 
@@ -55,15 +57,15 @@ void LightComponent::SetDirection(DirectX::SimpleMath::Vector3 DirectionVector)
     DirectionVector.Normalize();
     DirectX::SimpleMath::Quaternion q;
     {
-        DirectX::SimpleMath::Vector3 v1 = DirectX::SimpleMath::Vector3(light_data.DirectionWS.x,
-            light_data.DirectionWS.y, light_data.DirectionWS.z);
+        DirectX::SimpleMath::Vector3 v1 = DirectX::SimpleMath::Vector3(light_data->DirectionWS.x,
+            light_data->DirectionWS.y, light_data->DirectionWS.z);
         DirectX::SimpleMath::Vector3 v2 = DirectionVector;
         DirectX::SimpleMath::Vector3 cp = v1.Cross(v2);
         q = DirectX::SimpleMath::Quaternion(cp.x, cp.y, cp.z, 0);
         q.w = sqrtf(powf(v1.Length(), 2) + powf(v2.Length(), 2)) + v1.Dot(v2);
         q.Normalize();
     }
-    light_data.DirectionWS = DirectX::SimpleMath::Vector4(DirectionVector.x, DirectionVector.y, DirectionVector.z, 0);
+    light_data->DirectionWS = DirectX::SimpleMath::Vector4(DirectionVector.x, DirectionVector.y, DirectionVector.z, 0);
     
     DirectX::SimpleMath::Vector4 inverse = XMQuaternionInverse(q);
     up_direction_ = XMQuaternionMultiply(q, up_direction_);
@@ -90,16 +92,26 @@ void LightComponent::SetDirection(DirectX::SimpleMath::Vector3 DirectionVector)
     SetUpVSVectors();*/
 }
 
+void LightComponent::SetColor(DirectX::SimpleMath::Vector4 color)
+{
+    light_data->Color = color;
+}
+
 void LightComponent::SetSpotlightAngle(float SpotlightAngle)
 {
-    light_data.SpotlightAngle = SpotlightAngle;
+    light_data->SpotlightAngle = SpotlightAngle;
 
     
 }
 
 void LightComponent::SetRange(float Range)
 {
-    light_data.Range = Range;
+    light_data->Range = Range;
+}
+
+void LightComponent::SetIntensity(float Intensity)
+{
+    light_data->Intensity = Intensity;
 }
 
 /*void LightComponent::SetType(LightType Type)
@@ -126,8 +138,8 @@ void LightComponent::SetRange(float Range)
 void LightComponent::SetUpVSVectors()
 {
     //DirectX::SimpleMath::Matrix mView = XMMatrixLookToLH(light_data.PositionWS, light_data.DirectionWS, up_direction_);
-    light_data.PositionVS = XMVector4Transform(light_data.PositionWS, renderer_->camera()->view_matrix());
-    light_data.DirectionVS = XMVector4Transform(light_data.DirectionWS, renderer_->camera()->view_matrix());
+    light_data->PositionVS = XMVector4Transform(light_data->PositionWS, renderer_->camera()->view_matrix());
+    light_data->DirectionVS = XMVector4Transform(light_data->DirectionWS, renderer_->camera()->view_matrix());
     //light_data.mView = mView.Transpose();
     
     //ortographic_matrix_ = DirectX::XMMatrixOrthographicLH(width_, height_, near_, far_);

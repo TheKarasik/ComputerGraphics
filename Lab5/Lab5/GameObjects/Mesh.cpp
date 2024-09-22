@@ -3,11 +3,8 @@
 #include <random>
 #include <set>
 
-#include "IndexBuffer.h"
 #include "FileTexture.h"
 #include "Triangle.h"
-#include "VertexBuffer.h"
-#include "Structs.h"
 
 Mesh::Mesh(Renderer* renderer, const DirectX::SimpleMath::Matrix& transformation)
     : Object3D(renderer, transformation)

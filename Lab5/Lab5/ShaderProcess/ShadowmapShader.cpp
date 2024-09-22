@@ -152,13 +152,13 @@ void ShadowmapShader::Activate()
 void ShadowmapShader::ProvideMeshData(Mesh* mesh)
 {
     ConstantBufferTransformMatricies cb = {};
-    cb.world = mesh->transform_matricies_buffer_data.world;
+    cb.world = mesh->transform_matricies_buffer_data->world;
     cb.view = DirectionalLightComponent::GetDirectionalLight()->Camera()->view_matrix().Transpose();
     cb.projection = DirectionalLightComponent::GetDirectionalLight()->Camera()->projection_matrix().Transpose();
-    cb.camera_position = DirectionalLightComponent::GetDirectionalLight()->directional_light_data_.PositionWS;
+    cb.camera_position = DirectionalLightComponent::GetDirectionalLight()->directional_light_data_->PositionWS;
     
     constant_buffer_transform->UpdateBuffer(&cb);
-    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->buffer());
+    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->p_buffer());
 }
 
 void ShadowmapShader::ProvideLightData(LightComponent* light)

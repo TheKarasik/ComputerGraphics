@@ -14,11 +14,13 @@ public:
   void Activate();
   void ProvideMeshData(Mesh* mesh);
   void UpdateDirectionalLights();
+  void ProvideParticles(std::vector<ParticleSystem*>* particle_systems) {particle_systems_ = particle_systems;}
   ID3D11ShaderResourceView** GetDiffuseSRV() {return &SRV[0];}
   ID3D11ShaderResourceView** GetNormalSRV() {return &SRV[1];}
   ID3D11ShaderResourceView** GetSpecularSRV() {return &SRV[2];}
   ID3D11ShaderResourceView** GetDepthSRV() {return &SRVDepth;}
 private:
+  std::vector<ParticleSystem*>* particle_systems_;
   DirectX::SimpleMath::Vector2 ScreenDimensions;
   ConstantBuffer<ConstantBufferTransformMatricies>* constant_buffer_transform;
   ConstantBuffer<MaterialStructCB>* constant_buffer_texture;
@@ -32,7 +34,7 @@ private:
   ID3D11ShaderResourceView* SRV[BUFFER_NUM];
   ID3D11ShaderResourceView* SRVDepth;
   ID3D11Texture2D* RTDepthStencilTexture;
-  ID3D11DepthStencilView* DSV;
+  //ID3D11DepthStencilView* DSV;
   PixelShader* pixel_shader_;
   VertexShader* vertex_shader_;
   ID3D11InputLayout* layout;

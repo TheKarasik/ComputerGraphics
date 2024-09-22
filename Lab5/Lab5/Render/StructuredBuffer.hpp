@@ -20,7 +20,7 @@ StructuredBuffer<T>::StructuredBuffer(Renderer* renderer, unsigned short size) :
     srv_desc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
     srv_desc.Buffer.FirstElement = 0;
     srv_desc.Buffer.NumElements = size;
-    if(FAILED(renderer_->device()->CreateShaderResourceView(buffer_, &srv_desc, &SRV_)))
+    if(FAILED(renderer_->device()->CreateShaderResourceView(buffer_.Get(), &srv_desc, &SRV_)))
         return;
 }
 
@@ -28,9 +28,9 @@ template <typename T>
 void StructuredBuffer<T>::UpdateBuffer(T* raw_data)
 {
     D3D11_MAPPED_SUBRESOURCE res;
-    if (FAILED(renderer_->Context()->Map(buffer_,0, D3D11_MAP_WRITE_DISCARD, 0, &res))) return;
+    if (FAILED(renderer_->Context()->Map(buffer_.Get(),0, D3D11_MAP_WRITE_DISCARD, 0, &res))) return;
     size_t sizeInBytes = bytewidth_;
     memcpy_s(res.pData, sizeInBytes, raw_data, sizeInBytes);
-    renderer_->Context()->Unmap(buffer_, 0);
+    renderer_->Context()->Unmap(buffer_.Get(), 0);
     //renderer_->Context()->PSSetShaderResources(1, 1, &SRV);
 }

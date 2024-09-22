@@ -6,26 +6,33 @@
 //#include "Ball.h"
 //#include "Platform.h"
 #include <random>
-
+//#include "Structs.h"
 #include "DirectionalLightComponent.h"
-#include "Renderer.h"
 #include "PerspectiveCamera.h"
 #include "LightComponent.h"
 #include "Mesh.h"
 #include "MiniMapCamera.h"
 #include "OrthographicCamera.h"
 #include "FileTexture.h"
+//#include "ParticleAttractor.h"
+//#include "ParticleSystem.h"
+#include "ParticleAttractor.h"
+#include "ParticleSystem.h"
 #include "PointLightComponent.h"
 #include "SpotLightComponent.h"
 #include "ThirdPersonPlayer.h"
+#include "Renderer.h"
 //#include "DirectionalLightComponent.h"
 
 std::vector<Controllable*> Controllable::changing_objects;
 std::vector<Updatable*> Updatable::changing_objects;
+
+float Updatable::elapsed;
 //std::vector<DirectionalLightComponent*> DirectionalLights_; 
 
 Game::Game()
 {
+    
     display_ = new Display32(L"Lab 5", 800, 800, input_);
     input_ = new InputDevice(this);
     
@@ -38,7 +45,7 @@ Game::Game()
     
     renderer_ = new Renderer(*display_, camera_);
     
-    /*point_light = new PointLightComponent(renderer_);
+    point_light = new PointLightComponent(renderer_);
     point_light->SetPosition(DirectX::SimpleMath::Vector3( 0, 2, 10));
     point_light->SetColor(DirectX::SimpleMath::Vector4(0,0,1,1));
     point_light->SetRange(7);
@@ -47,12 +54,42 @@ Game::Game()
     spot_light->SetPosition(DirectX::SimpleMath::Vector3( -10, 10, 0));
     spot_light->SetDirection(DirectX::SimpleMath::Vector3(1,-1,0));
     spot_light->SetColor(DirectX::SimpleMath::Vector4(1,0,0,1));
-    spot_light->SetRange(50);*/
+    spot_light->SetRange(50);
 
     directional_light = new DirectionalLightComponent(renderer_);
     directional_light->SetDirection(DirectX::SimpleMath::Vector3(0,-1,0));
-    directional_light->SetIntensity(1.0f);
+    directional_light->SetIntensity(0.3f);
     directional_light->SetColor(DirectX::SimpleMath::Vector4(1,1,1,1));
+
+    emmiter_sphere = new EmitterSphere();
+    emmiter_sphere->max_spawn = 1000;
+    emmiter_sphere->position = DirectX::SimpleMath::Vector4(0, 2, -5, 1);
+    emmiter_sphere->scale = DirectX::SimpleMath::Vector4(5, 5, 5, 1);
+    emmiter_sphere->partitioning = DirectX::SimpleMath::Vector4(1, 1, 1, 1);
+    emmiter_sphere->rotation = DirectX::SimpleMath::Matrix::CreateRotationX(0) *
+            DirectX::SimpleMath::Matrix::CreateRotationY(0) *
+            DirectX::SimpleMath::Matrix::CreateRotationZ(0);
+    emmiter_sphere->particles_base_speed = 1;
+    emmiter_sphere->particles_life_span = 3;
+    emmiter_sphere->particles_weight_start = 1;
+    emmiter_sphere->particles_weight_finish = 1;
+    emmiter_sphere->color = DirectX::SimpleMath::Color(0.5f, 0.2f, 0.2f, 1.0f);
+    emmiter_sphere->particles_size_start = 0.1f;
+    emmiter_sphere->particles_size_finish = 0.1f;
+    emmiter_sphere->rng_seed = 1;
+
+    /*AttractorStruct attractor_struct;
+    attractor_struct.position = DirectX::SimpleMath::Vector4(3,2,0,1);
+    attractor_struct.gravity = 1;
+    attractor_struct.mass = 1;
+    attractor_struct.killZoneRadius = 1;
+    attractor_ = new ParticleAttractor(attractor_struct);*/
+    
+    particle_system_ = new ParticleSystem(*emmiter_sphere,  renderer_); 
+    particle_system_->initialize_system();
+    renderer_->ProvideParticleSystem(particle_system_);
+    
+    //particle_system_->set_emitter_data(emmiter_sphere);
     
     //Import Maxwell
     for (int i = 0; i<5; i++) ImportMaxwell();
@@ -109,7 +146,7 @@ void Game::GameLoop()
     {
         std::chrono::time_point<std::chrono::steady_clock> current = std::chrono::steady_clock::now();
         elapsed = std::chrono::duration_cast<std::chrono::microseconds>(current - previous).count() / 1000000.0f ;
-        //printf("elapsed: %f\n", elapsed);
+        Updatable::elapsed = elapsed;
         previous = current;
         lag += elapsed;
         
@@ -131,7 +168,6 @@ void Game::Update()
     /*std::chrono::time_point<std::chrono::steady_clock> current = std::chrono::steady_clock::now();
     float t = std::chrono::duration_cast<std::chrono::microseconds>(current - start).count() / 1000000.0f ;
     GRectangle->Update(t*0.1f);*/
-    
     for (auto co : Updatable::changing_objects) co->update();
 }
 

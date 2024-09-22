@@ -3,16 +3,17 @@
 #include "Drawable.h"
 #include "Updatable.h"
 #include "GeometricPrimitive.h"
-#include "Structs.h"
 
 //typedef ConstantBuffer<TransformCBStruct> TransformCB;
 /*template <typename T>
 class ConstantBuffer;*/
 
+class ConstantBufferTransformMatricies;
+
 class Object3D : public Updatable, public Drawable
 {
 public:
-    ConstantBufferTransformMatricies transform_matricies_buffer_data = {};
+    ConstantBufferTransformMatricies* transform_matricies_buffer_data;
     DirectX::SimpleMath::Matrix all_transform_matrix;
     
     Object3D(Renderer* renderer, DirectX::SimpleMath::Matrix transformation = DirectX::SimpleMath::Matrix::Identity,

@@ -2,6 +2,7 @@
 #include "LightComponent.h"
 
 
+struct DirectionalLightDataStruct;
 class CascadeShadowmapShader;
 
 class DirectionalLightComponent : public LightComponent
@@ -17,7 +18,7 @@ public:
     static DirectionalLightDataStruct* DirectionalLightData();
     static DirectionalLightComponent* GetDirectionalLight() {return DirectionalLight_;}
     //DirectX::SimpleMath::Matrix ViewProjection();
-    DirectionalLightDataStruct directional_light_data_;
+    DirectionalLightDataStruct* directional_light_data_;
 private:
     DirectX::SimpleMath::Vector3 v3(DirectX::SimpleMath::Vector4 v4) {return DirectX::SimpleMath::Vector3(v4.x, v4.y, v4.z);}
     OrthographicCamera* Camera_;

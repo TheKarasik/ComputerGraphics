@@ -1,6 +1,7 @@
 ﻿#include "ThirdPersonPlayer.h"
 
 #include "Mesh.h"
+#include "PerspectiveCamera.h"
 
 ThirdPersonPlayer::ThirdPersonPlayer(Mesh* controllable_obj, PerspectiveCamera* camera) : controllable_obj_(controllable_obj),Controllable(InputDevice::singleton), camera_(camera)
 {

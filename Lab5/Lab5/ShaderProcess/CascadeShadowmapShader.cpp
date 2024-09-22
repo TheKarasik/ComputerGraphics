@@ -135,12 +135,12 @@ void CascadeShadowmapShader::Activate()
 
 void CascadeShadowmapShader::ProvideMeshData(Mesh* mesh)
 {
-    constant_buffer_transform->UpdateBuffer(&mesh->transform_matricies_buffer_data.world);
-    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->buffer());
+    constant_buffer_transform->UpdateBuffer(&mesh->transform_matricies_buffer_data->world);
+    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->p_buffer());
 
     const auto a = renderer_->camera()->cascade_data();
     constant_buffer_cascade->UpdateBuffer(a);
-    renderer_->Context()->GSSetConstantBuffers(1,1, constant_buffer_cascade->buffer());
+    renderer_->Context()->GSSetConstantBuffers(1,1, constant_buffer_cascade->p_buffer());
 }
 
 void CascadeShadowmapShader::ProvideLightData(LightComponent* light)

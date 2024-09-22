@@ -1,6 +1,5 @@
 #pragma once
 #include "Drawable.h"
-#include "Structs.h"
 #include "AbstractBuffer.h"
 
 class Triangle : public Drawable

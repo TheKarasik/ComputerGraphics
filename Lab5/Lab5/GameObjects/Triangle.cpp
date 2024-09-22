@@ -23,8 +23,8 @@ Triangle::Triangle(Renderer* renderer, TriangleGeometry triangle) : Drawable(ren
 
 Triangle::~Triangle()
 {
-    (*vertex_buffer_->buffer())->Release();
-    (*index_buffer_->buffer())->Release();
+    (*vertex_buffer_->p_buffer())->Release();
+    (*index_buffer_->p_buffer())->Release();
 }
 
 Triangle& Triangle::operator=(const Triangle& triangle)

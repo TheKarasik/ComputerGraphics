@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include <SimpleMath.h>
 
-#include "Structs.h"
-
+struct CascadeData;
 class PerspectiveCamera;
 
 class Frustrum

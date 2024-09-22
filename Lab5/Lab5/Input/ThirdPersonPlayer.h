@@ -1,7 +1,7 @@
 ﻿#pragma once
-#include "PerspectiveCamera.h"
+//#include "PerspectiveCamera.h"
 #include "Controllable.h"
-#include "Structs.h"
+#define Pi 3.1415926535f
 
 class PerspectiveCamera;
 class Mesh;

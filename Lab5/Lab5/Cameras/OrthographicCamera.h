@@ -5,7 +5,6 @@
 
 #include "PerspectiveCamera.h"
 #include "Controllable.h"
-#include "Structs.h"
 #include "Updatable.h"
 
 struct MouseMoveEventArgs;

@@ -6,14 +6,17 @@
 #include <chrono>
 #include <vector>
 
-#include "AbstractBuffer.h"
-#include "Object3D.h"
-#include "PerspectiveCamera.h"
+//#include "PerspectiveCamera.h"
 #include "Structs.h"
 
 #define SHADOWMAP_WIDTH 4096
 #define SHADOWMAP_HEIGHT 4096
 
+class LightComponent;
+class MiniMapCamera;
+class Mesh;
+class PerspectiveCamera;
+class ParticleSystem;
 class LightingStageShader;
 class GBufferShader;
 class ShadowmapShader;
@@ -36,10 +39,12 @@ public:
     Microsoft::WRL::ComPtr<ID3D11Device> device() {return device_;}
     ID3D11DeviceContext* Context() {return context_;}
     ID3D11RenderTargetView* const* RTVMain() {return &rtv_main;}
+    ID3D11DepthStencilView** DSVMain() {return  &dsv_main;}
     //DirectionalLightComponent* currentDirectionalLight() const {return  current_directional_light;}
     void DrawEverything();
     void Render();
     void ProvideMeshData(Mesh* mesh);
+    void ProvideParticleSystem(ParticleSystem* particle_system) {particle_systems_.push_back(particle_system);}
     GBufferShader& GBuffer() {return *gbuffer_shader_;}
     MainShader* main_shader() {return main_shader_;}
     PerspectiveCamera* camera();
@@ -54,8 +59,10 @@ private:
     MainShader* main_shader_;
     GBufferShader* gbuffer_shader_;
     LightingStageShader* lighting_stage_shader_;
+    //ParticleSystem* particle_system_;
     //ShadowmapShader* shadowmap_shader_;
     ID3D11RenderTargetView* rtv_main;
+    ID3D11DepthStencilView* dsv_main;
     ID3D11RenderTargetView* rtv_mini_map;
     ID3D11RasterizerState* rastState;
     PerspectiveCamera* camera_;
@@ -66,4 +73,5 @@ private:
     ID3D11Texture2D* mini_map_buffer_;
     //ID3D11DepthStencilState* depth_stencil_state_;
     LightComponent* light_;
+    std::vector<ParticleSystem*> particle_systems_;
 };

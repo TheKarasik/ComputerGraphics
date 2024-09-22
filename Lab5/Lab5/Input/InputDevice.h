@@ -7,7 +7,6 @@
 //#include "SimpleMath.h"
 #include <iostream>
 
-//#include "Structs.h"
 #include "SimpleMath.h"
 //#include "Exports.h"
 struct MouseMoveEventArgs;

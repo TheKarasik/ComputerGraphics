@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "LightComponent.h"
 
+struct MeshGeometry;
+
 class SpotLightComponent : public LightComponent
 {
 public:

@@ -1,5 +1,5 @@
 //#include "ConstantBuffer.h"
-
+#pragma once
 #include "Renderer.h"
 
 /*template
@@ -37,7 +37,18 @@ void ConstantBuffer<T>::UpdateBuffer(T* raw_data)
     dataPtr->size = raw_data->size;
     renderer_->Context()->Unmap(buffer_, 0);*/
     
-    renderer_->Context()->UpdateSubresource(buffer_, 0, nullptr, raw_data, 0, 0);
+    renderer_->Context()->UpdateSubresource(buffer_.Get(), 0, nullptr, raw_data, 0, 0);
 }
 
+/*template <typename T>
+ConstantBuffer<T> ConstantBuffer<T>::GetStagingBuffer()
+{
+    D3D11_BUFFER_DESC stagingDesc;
+    ZeroMemory(&stagingDesc, sizeof(stagingDesc));
+    stagingDesc.Usage = D3D11_USAGE_STAGING;
+    stagingDesc.ByteWidth = sizeof(UINT);
+    stagingDesc.BindFlags = 0;
+    stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+
+}*/
 

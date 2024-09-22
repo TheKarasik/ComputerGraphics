@@ -1,9 +1,90 @@
 #pragma once
 #include <DirectXMath.h>
+#include "SimpleMath.h"
 #include "vector"
 #define Pi 3.1415926535f
 #define CASCADE_COUNT 4
 
+struct CameraMatricies
+{
+    DirectX::SimpleMath::Matrix view;
+    DirectX::SimpleMath::Matrix proj;
+};
+
+struct EmitterSphere
+{
+    DirectX::SimpleMath::Vector4 position;
+    DirectX::SimpleMath::Vector4 scale;
+    DirectX::SimpleMath::Vector4 partitioning;
+    DirectX::SimpleMath::Color color;
+    DirectX::SimpleMath::Matrix rotation;
+
+    UINT max_spawn;
+    //UINT particle_orientation;
+    float particles_base_speed;
+    float particles_life_span;
+    float particles_weight_start;
+    float particles_weight_finish;
+    float particles_size_start;
+    float particles_size_finish;
+    alignas(16) float rng_seed;
+};
+
+struct AttractorStruct
+{
+    DirectX::SimpleMath::Vector4 position;
+    float gravity;
+    float mass;
+    float killZoneRadius;
+};
+
+struct ParticleSimulationStuff
+{
+    DirectX::SimpleMath::Vector3 camPosition;
+    unsigned int attractorc_num;
+    alignas(16) float elapsed_time;
+};
+
+struct InitIndirectComputeArgs1DConstantBuffer
+{
+    alignas(16) float nbThreadGroupX;
+};
+
+struct Count
+{
+    alignas(16) UINT count;
+};
+
+struct ParticleIndexElement
+{
+    float distance; //squared distance from camera
+    float index; //index in the particle buffer
+};
+
+/*struct InstancedIndirectArgs
+{
+    unsigned int particle_index;
+    unsigned int billboard_corner_index;
+    unsigned int index_count_per_instance;
+    unsigned int instance_count;
+};*/
+
+struct Particle 
+{
+    DirectX::SimpleMath::Vector4 pos; 
+    DirectX::SimpleMath::Vector4 velocity;
+    //DirectX::SimpleMath::Vector4 acceleration;
+    DirectX::SimpleMath::Vector4 color;
+    DirectX::SimpleMath::Vector4 colorDelta;
+    
+    float lifeSpan;
+    float age;
+    float weight;
+    float weightEnd;
+    //UINT orientation;
+    float size;
+    float sizeEnd;
+};
 
 struct CascadeData
 {

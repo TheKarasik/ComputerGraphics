@@ -1,6 +1,8 @@
 ﻿#include "MainShader.h"
 
 #include <d3d11.h>
+
+#include "Display32.h"
 #include "LightComponent.h"
 #include "Mesh.h"
 #include "Renderer.h"
@@ -139,21 +141,21 @@ void MainShader::Activate()
 
 void MainShader::ProvideMeshData(Mesh* mesh)
 {
-    constant_buffer_transform->UpdateBuffer(&mesh->transform_matricies_buffer_data);
+    constant_buffer_transform->UpdateBuffer(mesh->transform_matricies_buffer_data);
     
-    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->buffer());
-    renderer_->Context()->PSSetConstantBuffers(0, 1, constant_buffer_transform->buffer());
+    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->p_buffer());
+    renderer_->Context()->PSSetConstantBuffers(0, 1, constant_buffer_transform->p_buffer());
 
     constant_buffer_texture->UpdateBuffer(&mesh->texture()->MatProp);
     
-    renderer_->Context()->PSSetConstantBuffers(1,1,constant_buffer_texture->buffer());
+    renderer_->Context()->PSSetConstantBuffers(1,1,constant_buffer_texture->p_buffer());
 
     renderer_->Context()->PSSetShaderResources(0,1,mesh->texture()->srv());
     renderer_->Context()->PSSetSamplers(0,1,mesh->texture()->sampler());
     
     constant_buffer_light->UpdateBuffer(light->LightData());
 
-    renderer_->Context()->PSSetConstantBuffers(2,1,constant_buffer_light->buffer());
+    renderer_->Context()->PSSetConstantBuffers(2,1,constant_buffer_light->p_buffer());
 
     /*if (!light->shadowmap_shader) return;
     

@@ -2,7 +2,6 @@
 #include <d3d11.h>
 
 #include "ConstantBuffer.h"
-#include "Structs.h"
 
 
 class LightComponent;

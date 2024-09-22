@@ -12,6 +12,7 @@
 #include "VertexShader.h"
 #include "FileTexture.h"
 #include "OrthographicCamera.h"
+#include "ParticleSystem.h"
 
 GBufferShader::GBufferShader(Renderer* renderer, Display32* display) : renderer_(renderer), display_(display)
 {
@@ -92,7 +93,7 @@ GBufferShader::GBufferShader(Renderer* renderer, Display32* display) : renderer_
     depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT ;
     depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     depthStencilViewDesc.Texture2D.MipSlice = 0;
-    if( FAILED(renderer_->device()->CreateDepthStencilView(RTDepthStencilTexture, &depthStencilViewDesc, &DSV)) )
+    if( FAILED(renderer_->device()->CreateDepthStencilView(RTDepthStencilTexture, &depthStencilViewDesc, renderer_->DSVMain())) )
         return ;
 
     D3D11_SHADER_RESOURCE_VIEW_DESC SRVDepthDesc;
@@ -176,10 +177,10 @@ void GBufferShader::Activate()
     //StructuredBufferSize temp = {};
     //temp.size = DirectionalLightComponent::DirectionalLightsNum();
     
-    renderer_->Context()->PSSetConstantBuffers(2, 1, constant_buffer_screen_to_view->buffer());
+    renderer_->Context()->PSSetConstantBuffers(2, 1, constant_buffer_screen_to_view->p_buffer());
 
     constant_buffer_cascade->UpdateBuffer(renderer_->camera()->cascade_data());
-    renderer_->Context()->PSSetConstantBuffers(3,1, constant_buffer_cascade->buffer());
+    renderer_->Context()->PSSetConstantBuffers(3,1, constant_buffer_cascade->p_buffer());
    
     renderer_->Context()->RSSetState(rastState);
 
@@ -195,14 +196,14 @@ void GBufferShader::Activate()
         renderer_->Context()->PSSetShaderResources(1,1,DirectionalLightComponent::GetDirectionalLight()->shadowmap_shader()->SRVShadow());
         renderer_->Context()->PSSetShaderResources(2,1,DirectionalLightComponent::GetDirectionalLight()->cascade_shadowmap_shader()->SRVShadow());
         renderer_->Context()->PSSetSamplers(1,1,DirectionalLightComponent::GetDirectionalLight()->shadowmap_shader()->SamplerState());
-        renderer_->Context()->PSSetConstantBuffers(1, 1, constant_buffer_directional_light->buffer());
+        renderer_->Context()->PSSetConstantBuffers(1, 1, constant_buffer_directional_light->p_buffer());
         //renderer_->Context()->PSSetShaderResources(2, 1, directional_lights->SRV());
     }
     
     //constant_buffer_dir_lights_num->UpdateBuffer(&temp);
     //renderer_->Context()->PSSetConstantBuffers(1,1, constant_buffer_dir_lights_num->buffer());
 
-    renderer_->Context()->OMSetRenderTargets(BUFFER_NUM, RTV, DSV);
+    renderer_->Context()->OMSetRenderTargets(BUFFER_NUM, RTV, *renderer_->DSVMain());
     renderer_->Context()->RSSetViewports(1, &viewport);
     
     float color[] = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -211,20 +212,28 @@ void GBufferShader::Activate()
     {
         renderer_->Context()->ClearRenderTargetView(RTV[i], color);
     }
-    renderer_->Context()->ClearDepthStencilView(DSV, D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1, 0);
+    renderer_->Context()->ClearDepthStencilView(*renderer_->DSVMain(), D3D11_CLEAR_DEPTH|D3D11_CLEAR_STENCIL, 1, 0);
 
     renderer_->DrawEverything();
+
+    if(particle_systems_)
+    {
+        for(const auto ps : *particle_systems_)
+        {
+            ps->draw();
+        }
+    }
 }
 
 void GBufferShader::ProvideMeshData(Mesh* mesh)
 {
-    constant_buffer_transform->UpdateBuffer(&mesh->transform_matricies_buffer_data);
+    constant_buffer_transform->UpdateBuffer(mesh->transform_matricies_buffer_data);
     
-    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->buffer());
+    renderer_->Context()->VSSetConstantBuffers(0, 1, constant_buffer_transform->p_buffer());
 
     constant_buffer_texture->UpdateBuffer(&mesh->texture()->MatProp);
     
-    renderer_->Context()->PSSetConstantBuffers(0,1,constant_buffer_texture->buffer());
+    renderer_->Context()->PSSetConstantBuffers(0,1,constant_buffer_texture->p_buffer());
 
     renderer_->Context()->PSSetShaderResources(0,1,mesh->texture()->srv());
     renderer_->Context()->PSSetSamplers(0,1,mesh->texture()->sampler());

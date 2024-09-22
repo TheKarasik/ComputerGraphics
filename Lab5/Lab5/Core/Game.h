@@ -15,6 +15,9 @@
 
 #define S_PER_UPDATE 0.016
 
+struct EmitterSphere;
+class ParticleAttractor;
+class ParticleSystem;
 class DirectionalLightComponent;
 class SpotLightComponent;
 class MiniMapCamera;
@@ -52,6 +55,9 @@ private:
     FileTexture* body_texture;
     FileTexture* whiskers_texture;
     PerspectiveCamera* camera_;
+    ParticleAttractor* attractor_;
+    ParticleSystem* particle_system_;
+    EmitterSphere* emmiter_sphere;
     //MiniMapCamera* mini_map_camera_;
     Renderer* renderer_;
     InputDevice* input_;
