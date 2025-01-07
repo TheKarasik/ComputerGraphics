@@ -36,37 +36,105 @@ ParticleSystem::ParticleSystem(EmitterSphere& emitter_data, Renderer* renderer) 
     rasterizer_desc.MultisampleEnable = TRUE;
     renderer_->device()->CreateRasterizerState(&rasterizer_desc, &RS_none);
 
-    D3D11_DEPTH_STENCIL_DESC depth_stencil_desc;
-    ZeroMemory(&depth_stencil_desc, sizeof(depth_stencil_desc));
-    depth_stencil_desc.DepthEnable = FALSE;
-    depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-    depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+    D3D11_DEPTH_STENCIL_DESC depth_stencil_desc_default;
+    ZeroMemory(&depth_stencil_desc_default, sizeof(depth_stencil_desc_default));
+    depth_stencil_desc_default.DepthEnable = TRUE;
+    depth_stencil_desc_default.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    depth_stencil_desc_default.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 
-    depth_stencil_desc.StencilEnable = FALSE;
-    depth_stencil_desc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
-    depth_stencil_desc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+    depth_stencil_desc_default.StencilEnable = FALSE;
+    depth_stencil_desc_default.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+    depth_stencil_desc_default.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
 
-    depth_stencil_desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-    depth_stencil_desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-    depth_stencil_desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-    depth_stencil_desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+    depth_stencil_desc_default.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    depth_stencil_desc_default.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    depth_stencil_desc_default.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    depth_stencil_desc_default.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
 
-    depth_stencil_desc.BackFace = depth_stencil_desc.FrontFace;
-    renderer_->device()->CreateDepthStencilState(&depth_stencil_desc, &DSS_none);
+    depth_stencil_desc_default.BackFace = depth_stencil_desc_default.FrontFace;
 
-    D3D11_BLEND_DESC blend_desc;
-    ZeroMemory(&blend_desc, sizeof(blend_desc));
-    blend_desc.AlphaToCoverageEnable = FALSE;
-    blend_desc.IndependentBlendEnable = FALSE;
-    blend_desc.RenderTarget[0].BlendEnable = TRUE;
-    blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-    blend_desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
-    blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-    blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
-    blend_desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-    blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-    blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-    renderer_->device()->CreateBlendState(&blend_desc, &BS_additive);
+    renderer_->device()->CreateDepthStencilState(&depth_stencil_desc_default, &DSS_depth_default);
+
+    D3D11_BLEND_DESC blend_desc_opaque;
+    ZeroMemory(&blend_desc_opaque, sizeof(blend_desc_opaque));
+    blend_desc_opaque.AlphaToCoverageEnable = FALSE;
+    blend_desc_opaque.IndependentBlendEnable = FALSE;
+    blend_desc_opaque.RenderTarget[0].BlendEnable = TRUE;
+    blend_desc_opaque.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+    blend_desc_opaque.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+    blend_desc_opaque.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
+    blend_desc_opaque.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    blend_desc_opaque.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    blend_desc_opaque.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    blend_desc_opaque.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+    renderer_->device()->CreateBlendState(&blend_desc_opaque, &BS_opaque);
+
+    D3D11_DEPTH_STENCIL_DESC depth_stencil_desc_none;
+    ZeroMemory(&depth_stencil_desc_none, sizeof(depth_stencil_desc_none));
+    depth_stencil_desc_none.DepthEnable = FALSE;
+    depth_stencil_desc_none.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    depth_stencil_desc_none.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+
+    depth_stencil_desc_none.StencilEnable = FALSE;
+    depth_stencil_desc_none.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+    depth_stencil_desc_none.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+
+    depth_stencil_desc_none.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    depth_stencil_desc_none.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    depth_stencil_desc_none.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    depth_stencil_desc_none.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+
+    depth_stencil_desc_none.BackFace = depth_stencil_desc_none.FrontFace;
+    renderer_->device()->CreateDepthStencilState(&depth_stencil_desc_none, &DSS_none);
+
+    D3D11_BLEND_DESC blend_desc_additive;
+    ZeroMemory(&blend_desc_additive, sizeof(blend_desc_additive));
+    blend_desc_additive.AlphaToCoverageEnable = FALSE;
+    blend_desc_additive.IndependentBlendEnable = FALSE;
+    blend_desc_additive.RenderTarget[0].BlendEnable = TRUE;
+    blend_desc_additive.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    blend_desc_additive.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+    blend_desc_additive.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+    blend_desc_additive.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+    blend_desc_additive.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    blend_desc_additive.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    blend_desc_additive.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    renderer_->device()->CreateBlendState(&blend_desc_additive, &BS_additive);
+
+    D3D11_DEPTH_STENCIL_DESC depth_stencil_desc_depth_read;
+    ZeroMemory(&depth_stencil_desc_depth_read, sizeof(depth_stencil_desc_depth_read));
+    depth_stencil_desc_depth_read.DepthEnable = TRUE;
+    depth_stencil_desc_depth_read.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+    depth_stencil_desc_depth_read.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+
+    depth_stencil_desc_depth_read.StencilEnable = FALSE;
+    depth_stencil_desc_depth_read.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+    depth_stencil_desc_depth_read.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+
+    depth_stencil_desc_depth_read.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    depth_stencil_desc_depth_read.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    depth_stencil_desc_depth_read.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    depth_stencil_desc_depth_read.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+
+    depth_stencil_desc_depth_read.BackFace = depth_stencil_desc_depth_read.FrontFace;
+
+    renderer_->device()->CreateDepthStencilState(&depth_stencil_desc_depth_read, &DSS_depth_read);
+
+    D3D11_BLEND_DESC blend_desc_not_premultiplied;
+    ZeroMemory(&blend_desc_not_premultiplied, sizeof(blend_desc_not_premultiplied));
+    blend_desc_not_premultiplied.AlphaToCoverageEnable = FALSE;
+    blend_desc_not_premultiplied.IndependentBlendEnable = FALSE;
+    blend_desc_not_premultiplied.RenderTarget[0].BlendEnable = TRUE;
+    blend_desc_not_premultiplied.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    blend_desc_not_premultiplied.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+    blend_desc_not_premultiplied.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    blend_desc_not_premultiplied.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+    blend_desc_not_premultiplied.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    blend_desc_not_premultiplied.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    blend_desc_not_premultiplied.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+    renderer_->device()->CreateBlendState(&blend_desc_not_premultiplied, &BS_not_premultiplied);
 
     D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
     SRVDesc.Format = DXGI_FORMAT_UNKNOWN;
@@ -128,6 +196,8 @@ ParticleSystem::ParticleSystem(EmitterSphere& emitter_data, Renderer* renderer) 
     CB_camera_matricies = new ConstantBuffer<CameraMatricies>(renderer_);
 
     CS_init_particles = new ComputeShader(*renderer_, L"./Shaders/ParticleSystemShaders/MyInitParticlesShader.hlsl");
+
+    CB_randomized_particles_parameters = new ConstantBuffer<RandomizedParticlesParameters>(renderer_);
  
     //CB_simulate_particles = new ConstantBuffer<SimulateParticlesStruct>(renderer_);
 }
@@ -147,7 +217,7 @@ void ParticleSystem::update()
         emitter_data_->max_spawn = 0;
     }
     auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-    std::default_random_engine eng(seed);
+    std::default_random_engine eng(seed); 
     std::uniform_real_distribution<> normal_distr(-1, 1);
     emitter_data_->rng_seed = normal_distr(eng);
     
@@ -155,6 +225,7 @@ void ParticleSystem::update()
     d.elapsed_time = elapsed;
     d.attractorc_num = ParticleAttractor::Attractors.size();
     d.camPosition = renderer_->camera()->position();
+    d.waterLevel = 1;
     CB_simulation->UpdateBuffer(&d);
 
     if (ParticleAttractor::Attractors.data()) SB_attractors->UpdateBuffer(ParticleAttractor::Attractors.data());
@@ -163,15 +234,19 @@ void ParticleSystem::update()
     cm.view = renderer_->camera()->view_matrix().Transpose();
     cm.proj = renderer_->camera()->projection_matrix().Transpose();
     CB_camera_matricies->UpdateBuffer(&cm);
+
+    std::uniform_real_distribution<> lifespan_distr(-0.3, 0.3);
+    RandomizedParticlesParameters rpp = {};
+    rpp.rand_pos = DirectX::SimpleMath::Vector3(normal_distr(eng), normal_distr(eng), normal_distr(eng));
+    rpp.life_span_multiplier = normal_distr(eng);
+    CB_randomized_particles_parameters->UpdateBuffer(&rpp);
+    //sort
+    sort->run(maxParticles, *UAV_alive_index_sorting[current_buffer]->UAV(), *CB_alive_count->p_buffer());
 }
 
-void ParticleSystem::draw()
+void ParticleSystem::Render(ID3D11RenderTargetView* rtv)
 {
-    Emit();
-    Simulation();
     
-    //sort
-    //sort->run(maxParticles, *UAV_alive_index_sorting[current_buffer]->UAV(), *CB_alive_count->p_buffer());
 
     renderer_->Context()->VSSetShader(VS_render_particles->vertex_shader(), nullptr, 0);
     renderer_->Context()->GSSetShader(GS_render_particles->geometry_shader(), nullptr, 0);  
@@ -190,16 +265,39 @@ void ParticleSystem::draw()
     renderer_->Context()->VSSetConstantBuffers(3, 1, CB_alive_count->p_buffer());
 
     const float blendFactor[4] = { 0.f, 0.f, 0.f, 0.f };
-    renderer_->Context()->OMSetBlendState(BS_additive, blendFactor, 0xffffffff);
-    renderer_->Context()->OMSetDepthStencilState(DSS_none, 0);
+    switch (blendmode)
+    {
+    case 0:
+        renderer_->Context()->OMSetBlendState(BS_opaque, blendFactor, 0xffffffff);
+        renderer_->Context()->OMSetDepthStencilState(DSS_depth_default, 0);
+        break;
+    case 1:
+        renderer_->Context()->OMSetBlendState(BS_not_premultiplied, blendFactor, 0xffffffff);
+        renderer_->Context()->OMSetDepthStencilState(DSS_depth_read, 0);
+        break;
+    case 2:
+        renderer_->Context()->OMSetBlendState(BS_additive, blendFactor, 0xffffffff);
+        //renderer_->Context()->OMSetDepthStencilState(DSS_none, 0);
+        renderer_->Context()->OMSetDepthStencilState(DSS_depth_read, 0);
+        break;   
+    }
     renderer_->Context()->RSSetState(RS_none);
-    renderer_->Context()->OMSetRenderTargets(1, renderer_->RTVMain(), *renderer_->DSVMain());
+    renderer_->Context()->OMSetRenderTargets(1, &rtv, *renderer_->DSVMain());
+    //renderer_->Context()->OMSetRenderTargets(1, renderer_->RTVMain(), nullptr);
 
     renderer_->Context()->DrawInstancedIndirect(*UAV_indirect_draw_args->p_buffer(), 0);
 
     ZeroMemory(vertexShaderSRVs, sizeof(vertexShaderSRVs));
     renderer_->Context()->VSSetShaderResources(0, ARRAYSIZE(vertexShaderSRVs), vertexShaderSRVs);
     renderer_->Context()->GSSetShader(nullptr, nullptr, 0);
+    
+}
+
+void ParticleSystem::ProcessFrame()
+{
+    Emit();
+    Simulation();
+    Render(*renderer_->RTVMain());
 }
 
 void ParticleSystem::Emit()
@@ -212,7 +310,9 @@ void ParticleSystem::Emit()
     renderer_->Context()->CopyStructureCount(*CB_deadlist_count->p_buffer(), 0, *UAV_deadlist->UAV());
     renderer_->Context()->CSSetConstantBuffers(2, 1, CB_deadlist_count->p_buffer());
 
-    emitter_data_->rng_seed = static_cast<float>(std::rand());
+    renderer_->Context()->CSSetConstantBuffers(3, 1, CB_randomized_particles_parameters->p_buffer());
+
+    emitter_data_->rng_seed = static_cast<float>(std::rand()); 
     CB_emitter_sphere->UpdateBuffer(emitter_data_);
     renderer_->Context()->CSSetConstantBuffers(4, 1, CB_emitter_sphere->p_buffer());
     renderer_->Context()->CSSetShader(CS_emit_particles->compute_shader(), nullptr, 0);
@@ -290,6 +390,7 @@ void ParticleSystem::initialize_system()
     UINT initialCount[] = { 0 };
     ID3D11UnorderedAccessView* UAV_dummy[3] = {nullptr, nullptr, nullptr};
     renderer_->Context()->CSSetUnorderedAccessViews(0, 1, UAV_deadlist->UAV(), initialCount);
+    initialCount[0] = (UINT)-1;
     renderer_->Context()->CSSetUnorderedAccessViews(1, 1, UAV_particle_pool->UAV(), initialCount);
     renderer_->Context()->CSSetUnorderedAccessViews(2, 1, UAV_indirect_dispatch_args[current_buffer]->UAV(), initialCount);
     renderer_->Context()->CSSetShader(CS_init_particles->compute_shader(), nullptr, 0);

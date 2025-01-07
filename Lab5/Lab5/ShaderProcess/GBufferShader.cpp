@@ -10,7 +10,7 @@
 #include "Renderer.h"
 #include "ShadowmapShader.h"
 #include "VertexShader.h"
-#include "FileTexture.h"
+#include "..\Render\FileTexture.h"
 #include "OrthographicCamera.h"
 #include "ParticleSystem.h"
 
@@ -73,36 +73,6 @@ GBufferShader::GBufferShader(Renderer* renderer, Display32* display) : renderer_
     }
 
     //Буффер глубины
-    D3D11_TEXTURE2D_DESC TextureDepthStencilDesc;
-    ZeroMemory(&TextureDepthStencilDesc, sizeof(TextureDepthStencilDesc));
-    TextureDepthStencilDesc.Width = display->screenWidth_;
-    TextureDepthStencilDesc.Height = display->screenHeight_;
-    TextureDepthStencilDesc.MipLevels = 1;
-    TextureDepthStencilDesc.ArraySize = 1;
-    TextureDepthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
-    TextureDepthStencilDesc.SampleDesc.Count = 1;
-    TextureDepthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-    TextureDepthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE ;
-    TextureDepthStencilDesc.CPUAccessFlags = 0;
-    TextureDepthStencilDesc.MiscFlags = 0;
-    if( FAILED(renderer_->device()->CreateTexture2D(&TextureDepthStencilDesc, NULL, &RTDepthStencilTexture)) )
-        return;
-
-    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-    ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
-    depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT ;
-    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    depthStencilViewDesc.Texture2D.MipSlice = 0;
-    if( FAILED(renderer_->device()->CreateDepthStencilView(RTDepthStencilTexture, &depthStencilViewDesc, renderer_->DSVMain())) )
-        return ;
-
-    D3D11_SHADER_RESOURCE_VIEW_DESC SRVDepthDesc;
-    SRVDepthDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-    SRVDepthDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    SRVDepthDesc.Texture2D.MostDetailedMip = 0;
-    SRVDepthDesc.Texture2D.MipLevels = 1;
-    if( FAILED(renderer_->device()->CreateShaderResourceView(RTDepthStencilTexture, &SRVDepthDesc, &SRVDepth)) )
-        return;
 
     D3D11_INPUT_ELEMENT_DESC inputElements[] = {
         D3D11_INPUT_ELEMENT_DESC {
@@ -216,13 +186,13 @@ void GBufferShader::Activate()
 
     renderer_->DrawEverything();
 
-    if(particle_systems_)
+    /*if(particle_systems_)
     {
         for(const auto ps : *particle_systems_)
         {
             ps->draw();
         }
-    }
+    }*/
 }
 
 void GBufferShader::ProvideMeshData(Mesh* mesh)

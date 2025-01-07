@@ -1,0 +1,7 @@
+﻿  Renderer.cpp
+D:\Study\Computer Graphics\Lab5\Lab5\Lights\LightComponent.h(14,22): warning C4099: 'LightDataStruct': type name first seen using 'struct' now seen using 'class'
+D:\Study\Computer Graphics\Lab5\Lab5\Utils\Structs.h(180,8): message : see declaration of 'LightDataStruct'
+D:\Study\Computer Graphics\Lab5\Lab5\Cameras\PerspectiveCamera.h(48,9): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\Study\Computer Graphics\Lab5\Lab5\GameObjects\Object3D.h(11,39): warning C4099: 'ConstantBufferTransformMatricies': type name first seen using 'struct' now seen using 'class'
+D:\Study\Computer Graphics\Lab5\Lab5\ShaderProcess\ShadowmapShader.h(6,8): message : see declaration of 'ConstantBufferTransformMatricies'
+  Lab5.vcxproj -> D:\Study\Computer Graphics\Lab5\x64\Debug\Lab5.exe

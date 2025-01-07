@@ -8,7 +8,7 @@
 #include "Renderer.h"
 #include "PixelShader.h"
 #include "ShadowmapShader.h"
-#include "FileTexture.h"
+#include "..\Render\FileTexture.h"
 #include "VertexShader.h"
 
 MainShader::MainShader(Renderer* renderer, IDXGISwapChain* swap_chain, Microsoft::WRL::ComPtr<ID3D11Device> device, Display32 display32) : renderer_(renderer)

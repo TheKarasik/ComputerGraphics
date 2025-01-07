@@ -22,6 +22,8 @@ public:
   void set_position(DirectX::SimpleMath::Vector3 position) {position_ = position;}
   void set_up_direction(DirectX::SimpleMath::Vector3 up_direction) {up_direction_ = up_direction;}
   void set_focus_position(DirectX::SimpleMath::Vector3 focus_position) {focus_position_ = focus_position;}
+  void invert_pitch(bool pitch_inversion) {pitch_inversion_ = pitch_inversion;}
+  void provide_reference_camaera(PerspectiveCamera* reference_camera) {reference_camera_ = reference_camera;}
   DirectX::SimpleMath::Vector3 position() {return  position_;}
   DirectX::SimpleMath::Vector3 focus_position() {return focus_position_;}
   DirectX::SimpleMath::Vector3 up_direction() {return up_direction_;}
@@ -51,6 +53,7 @@ private:
   DirectX::SimpleMath::Matrix perspective_matrix_;
   
   DirectX::SimpleMath::Vector3 position_;
+  //DirectX::SimpleMath::Vector3 reflection_position_;
   DirectX::SimpleMath::Vector3 focus_position_;
   DirectX::SimpleMath::Vector3 up_direction_;
 
@@ -59,6 +62,8 @@ private:
 
 protected:
   CascadeData* cascade_data_;
+  bool pitch_inversion_ = false;
+  PerspectiveCamera* reference_camera_;
 
 public:
   //void Control() override;

@@ -18,7 +18,6 @@ public:
   ID3D11ShaderResourceView** GetDiffuseSRV() {return &SRV[0];}
   ID3D11ShaderResourceView** GetNormalSRV() {return &SRV[1];}
   ID3D11ShaderResourceView** GetSpecularSRV() {return &SRV[2];}
-  ID3D11ShaderResourceView** GetDepthSRV() {return &SRVDepth;}
 private:
   std::vector<ParticleSystem*>* particle_systems_;
   DirectX::SimpleMath::Vector2 ScreenDimensions;
@@ -32,8 +31,7 @@ private:
   ID3D11Texture2D* LightTextures[BUFFER_NUM];
   ID3D11RenderTargetView* RTV[BUFFER_NUM];
   ID3D11ShaderResourceView* SRV[BUFFER_NUM];
-  ID3D11ShaderResourceView* SRVDepth;
-  ID3D11Texture2D* RTDepthStencilTexture;
+  //ID3D11Texture2D* RTDepthStencilTexture;
   //ID3D11DepthStencilView* DSV;
   PixelShader* pixel_shader_;
   VertexShader* vertex_shader_;

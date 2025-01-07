@@ -1,7 +1,7 @@
 ﻿#include "LightingStageShader.h"
 
 #include "Display32.h"
-#include "FileTexture.h"
+#include "..\Render\FileTexture.h"
 #include "GBufferShader.h"
 #include "LightComponent.h"
 #include "Mesh.h"
@@ -182,7 +182,7 @@ void LightingStageShader::Activate()
     //Расставим константные буферы, текстурки, мб что ещё
     renderer_->Context()->PSSetShaderResources(0, 1, GBuffer_->GetDiffuseSRV());
     renderer_->Context()->PSSetShaderResources(1, 1, GBuffer_->GetNormalSRV());
-    renderer_->Context()->PSSetShaderResources(2, 1, GBuffer_->GetDepthSRV());
+    renderer_->Context()->PSSetShaderResources(2, 1, renderer_->GetDepthSRV());
     renderer_->Context()->PSSetShaderResources(3, 1, GBuffer_->GetSpecularSRV());
 
     DirectX::SimpleMath::Vector3 CamPos = renderer_->camera()->position();

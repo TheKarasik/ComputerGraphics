@@ -9,6 +9,7 @@ D:\Study\Computer Graphics\Lab5\Lab5\GameObjects\Mesh.cpp;D:\Study\Computer Grap
 D:\Study\Computer Graphics\Lab5\Lab5\GameObjects\Object3D.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Object3D.obj
 D:\Study\Computer Graphics\Lab5\Lab5\GameObjects\OrbitalMovement.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\OrbitalMovement.obj
 D:\Study\Computer Graphics\Lab5\Lab5\GameObjects\Triangle.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Triangle.obj
+D:\Study\Computer Graphics\Lab5\Lab5\GameObjects\Water.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Water.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Input\InputDevice.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\InputDevice.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Input\ThirdPersonPlayer.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\ThirdPersonPlayer.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Lab5.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Lab5.obj
@@ -32,8 +33,10 @@ D:\Study\Computer Graphics\Lab5\Lab5\ShaderProcess\GeometryShader.cpp;D:\Study\C
 D:\Study\Computer Graphics\Lab5\Lab5\ShaderProcess\LightingStageShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\LightingStageShader.obj
 D:\Study\Computer Graphics\Lab5\Lab5\ShaderProcess\MainShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\MainShader.obj
 D:\Study\Computer Graphics\Lab5\Lab5\ShaderProcess\PixelShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\PixelShader.obj
+D:\Study\Computer Graphics\Lab5\Lab5\ShaderProcess\ReflectionShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\ReflectionShader.obj
 D:\Study\Computer Graphics\Lab5\Lab5\ShaderProcess\Shader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Shader.obj
 D:\Study\Computer Graphics\Lab5\Lab5\ShaderProcess\ShadowmapShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\ShadowmapShader.obj
 D:\Study\Computer Graphics\Lab5\Lab5\ShaderProcess\VertexShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\VertexShader.obj
+D:\Study\Computer Graphics\Lab5\Lab5\ShaderProcess\WaterShader.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\WaterShader.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Utils\Delegates.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Delegates.obj
 D:\Study\Computer Graphics\Lab5\Lab5\Utils\Importer3D.cpp;D:\Study\Computer Graphics\Lab5\Lab5\x64\Debug\Importer3D.obj

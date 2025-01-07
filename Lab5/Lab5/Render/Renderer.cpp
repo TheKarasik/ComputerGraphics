@@ -22,9 +22,11 @@
 #include "MiniMapCamera.h"
 #include "OrthographicCamera.h"
 #include "ParticleSystem.h"
+#include "ReflectionShader.h"
 #include "ShadowmapShader.h"
+#include "Water.h"
 
-std::vector<Drawable*> Drawable::visual_objects;
+//std::vector<Drawable*> Drawable::visual_objects;
 
 Renderer::Renderer(Display32& Display, PerspectiveCamera* camera) : Display_(Display), camera_(camera)
 {
@@ -69,12 +71,46 @@ Renderer::Renderer(Display32& Display, PerspectiveCamera* camera) : Display_(Dis
     ID3D11Texture2D* backTex;
     res = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backTex);	// __uuidof(ID3D11Texture2D)
     res = device_->CreateRenderTargetView(backTex, nullptr, &rtv_main);
+
+    
+    D3D11_TEXTURE2D_DESC TextureDepthStencilDesc;
+    ZeroMemory(&TextureDepthStencilDesc, sizeof(TextureDepthStencilDesc));
+    TextureDepthStencilDesc.Width = Display_.screenWidth_;
+    TextureDepthStencilDesc.Height = Display_.screenHeight_;
+    TextureDepthStencilDesc.MipLevels = 1;
+    TextureDepthStencilDesc.ArraySize = 1;
+    TextureDepthStencilDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
+    TextureDepthStencilDesc.SampleDesc.Count = 1;
+    TextureDepthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+    TextureDepthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE ;
+    TextureDepthStencilDesc.CPUAccessFlags = 0;
+    TextureDepthStencilDesc.MiscFlags = 0;
+    if( FAILED(device()->CreateTexture2D(&TextureDepthStencilDesc, NULL, &RTDepthStencilTexture)) )
+        return;
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+    ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
+    depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT ;
+    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    depthStencilViewDesc.Texture2D.MipSlice = 0;
+    if( FAILED(device()->CreateDepthStencilView(RTDepthStencilTexture, &depthStencilViewDesc, &dsv_main)) )
+        return ;
+    
+    D3D11_SHADER_RESOURCE_VIEW_DESC SRVDepthDesc;
+    SRVDepthDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+    SRVDepthDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    SRVDepthDesc.Texture2D.MostDetailedMip = 0;
+    SRVDepthDesc.Texture2D.MipLevels = 1;
+    if( FAILED(device()->CreateShaderResourceView(RTDepthStencilTexture, &SRVDepthDesc, &SRVDepth)) )
+        return;
     
     //main_shader_ = new MainShader(this, swapChain, device_, Display_);
     gbuffer_shader_ = new GBufferShader(this, &Display_);
     lighting_stage_shader_ = new LightingStageShader(this, gbuffer_shader_, &Display_);
 
-    gbuffer_shader_->ProvideParticles(&particle_systems_);
+    particle_systems_ = new std::vector<ParticleSystem*>;
+
+    //gbuffer_shader_->ProvideParticles(particle_systems_);
     
     /*particle_system_ = new ParticleSystem(100, DirectX::SimpleMath::Vector3(0,0,0), this);
     particle_system_->initialize_system();*/
@@ -126,6 +162,14 @@ Renderer::~Renderer()
     device()->Release();
 }
 
+void Renderer::RenderParticles(ID3D11RenderTargetView* rtv)
+{
+    for(const auto ps : *particle_systems_)
+    {
+        ps->Render(rtv);
+    }
+}
+
 void Renderer::DrawEverything()
 {
     for(auto vo : Drawable::visual_objects)
@@ -136,7 +180,6 @@ void Renderer::DrawEverything()
 
 void Renderer::Render()
 {
-    //particle_system_->render();
     
     //Рендер сцены для Cascade ShadowMap
     if (DirectionalLightComponent::GetDirectionalLight())
@@ -159,11 +202,17 @@ void Renderer::Render()
     //Рендер сцены для LightStage
     RenderingState = LightingStageState;
     lighting_stage_shader_->Activate();
-
-    /*for(const auto ps : particle_systems_)
+    
+    
+    if(particle_systems_)
     {
-        ps->draw();
-    }*/
+        for(const auto ps : *particle_systems_)
+        {
+            ps->ProcessFrame();
+        }
+    }
+    
+    water_->render();
     
     //Рендер сцены для игрока
     
@@ -214,6 +263,8 @@ void Renderer::ProvideMeshData(Mesh* mesh)
     case LightingStageState:
         lighting_stage_shader_->ProvideMeshData(mesh);
         break;
+    case ReflectionState:
+        water_->GetCurrentReflectionShader()->ProvideMeshData(mesh);
     }
 }
 

@@ -17,6 +17,9 @@ Importer3D::MeshesWithTransformation::MeshAndTriangles::MeshAndTriangles(aiMesh*
             geom->vertecies[j].position = DirectX::XMFLOAT4(position3.x, position3.y, position3.z, 1);
             geom->vertecies[j].tex = *reinterpret_cast<DirectX::XMFLOAT2*>(&mesh->mTextureCoords[0][j]);
             geom->vertecies[j].normal = *reinterpret_cast<DirectX::XMFLOAT3*>(&mesh->mNormals[j]);
+            geom->vertecies[j].tangent = *reinterpret_cast<DirectX::XMFLOAT3*>(&mesh->mTangents[j]);
+            geom->vertecies[j].binormal = *reinterpret_cast<DirectX::XMFLOAT3*>(&mesh->mBitangents[j]);
+            //geom->vertecies[j].color = *reinterpret_cast<DirectX::XMFLOAT4*>(&mesh->mColors[0][j]);
         }
     for (uint32_t j = 0; j < mesh->mNumFaces; j++)
     {

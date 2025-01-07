@@ -38,6 +38,12 @@ cbuffer DeadListCB : register(b2)
     uint dead_particles;
 }
 
+cbuffer RandomizedParticlesParametres : register (b3)
+{
+    float3 rand_pos;
+    float lifespan_multiplier;
+}
+
 [numthreads(256,1,1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
@@ -46,14 +52,16 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         rng_state = wang_hash(id.x + rng_seed);
         Particle p = (Particle) 0;
         p.pos = emitterPosition;
-        float3 position = emitterPartitioning.xyz * float3(rand_xorshift_normalized() - 0.5, rand_xorshift_normalized() - 0.5, rand_xorshift_normalized() - 0.5);
-        position = mul(emitterScale.xyz * normalize(position), emitterRotation);
+        //float3 position = emitterPartitioning.xyz * float3(rand_xorshift_normalized() - 0.5, rand_xorshift_normalized() - 0.5, rand_xorshift_normalized() - 0.5);
+        //position = mul(emitterScale.xyz * normalize(position), emitterRotation);
+        float3 position = mul(emitterScale.xyz * normalize(rand_pos), emitterRotation);
         p.pos.xyz += position;
         p.pos.w = 1.0f;
 
-        p.velocity = particlesBaseSpeed * normalize(float4(position - emitterPosition, 0.0f));
+        p.velocity = particlesBaseSpeed * normalize(float4(p.pos.xyz - emitterPosition, 0.0f));
 
-        p.lifeSpan = particlesLifeSpan * rand_xorshift_normalized();
+        //p.lifeSpan = particlesLifeSpan * rand_xorshift_normalized();
+        p.lifeSpan = particlesLifeSpan * (1 + lifespan_multiplier);
         p.age = abs(p.lifeSpan);
         p.weight = particlesWeightStart;
         p.weightDelta = (particlesWeightFinish - particlesWeightStart) / p.lifeSpan;

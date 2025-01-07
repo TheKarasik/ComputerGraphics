@@ -5,10 +5,38 @@
 #define Pi 3.1415926535f
 #define CASCADE_COUNT 4
 
+enum WaterRenderType : unsigned int
+{
+    Refration = 0,
+    Reflection = 1
+};
+
+struct WaterBuffer 
+{
+    DirectX::SimpleMath::Vector4 refractionTint;
+    DirectX::SimpleMath::Vector4 lightDirection;
+    float waterTranslation;
+    float reflectRefractScale;
+    float specularShininess;
+    float padding;
+};
+
+struct WaterAdditionalDataStruct
+{
+    DirectX::SimpleMath::Matrix reflection;
+    alignas(16) DirectX::SimpleMath::Vector2 normalMapTiling;
+};
+
 struct CameraMatricies
 {
     DirectX::SimpleMath::Matrix view;
     DirectX::SimpleMath::Matrix proj;
+};
+
+struct RandomizedParticlesParameters
+{
+    DirectX::SimpleMath::Vector3 rand_pos;
+    float life_span_multiplier;
 };
 
 struct EmitterSphere
@@ -42,7 +70,8 @@ struct ParticleSimulationStuff
 {
     DirectX::SimpleMath::Vector3 camPosition;
     unsigned int attractorc_num;
-    alignas(16) float elapsed_time;
+    float elapsed_time;
+    alignas(16) float waterLevel;
 };
 
 struct InitIndirectComputeArgs1DConstantBuffer
@@ -101,6 +130,10 @@ struct TriangleVertex     //New version
     DirectX::XMFLOAT4 position;
     DirectX::XMFLOAT2 tex;
     DirectX::XMFLOAT3 normal;
+    DirectX::XMFLOAT3 tangent;
+    DirectX::XMFLOAT3 binormal;
+    /*DirectX::XMFLOAT4 color;*/
+    
 };
 
 struct StructuredBufferSize
@@ -207,6 +240,7 @@ enum RenderStateEnum
     CascadeShadowmapRenderState = 3,
     GBufferRenderState = 4,
     LightingStageState = 5,
+    ReflectionState = 6,
     //MinimapRenderState = 2
 };
 

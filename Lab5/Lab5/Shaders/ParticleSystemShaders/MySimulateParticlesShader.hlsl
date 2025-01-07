@@ -14,6 +14,7 @@ cbuffer simulate_cb : register(b0)
     float3 camPosition;
     uint attractorsNum;
     float dt;
+    float water_level;
 }
 
 [numthreads(256,1,1)]
@@ -58,6 +59,10 @@ void CSMain(uint3 id : SV_DispatchThreadID, uint groupID : SV_GroupIndex)
         float3 acceleration = particleForce.xyz / p.weight;
         p.velocity.xyz += acceleration * dt;
         p.pos.xyz += p.velocity.xyz * dt;
+        if (p.pos.y <= water_level)
+        {
+            p.age = 0.0;
+        }
 
         for (uint j = 0; j < attractorsNum; ++j)
         {

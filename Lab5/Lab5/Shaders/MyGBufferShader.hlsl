@@ -150,6 +150,7 @@ PS_OUTPUT PSMain(PS_INPUT input)
     }
     
     float bias = 0.001f;
+    //float bias = 0;
     float2 projectTexCoord;
     float4 lightViewPosition = mul(input.PosWS, cd.ViewProj[layer]);
     projectTexCoord.x =  lightViewPosition.x / lightViewPosition.w / 2.0f + 0.5f;

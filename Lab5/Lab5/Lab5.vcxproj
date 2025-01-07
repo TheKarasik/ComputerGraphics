@@ -391,6 +391,7 @@
     <ClCompile Include="GameObjects\Object3D.cpp" />
     <ClCompile Include="GameObjects\OrbitalMovement.cpp" />
     <ClCompile Include="GameObjects\Triangle.cpp" />
+    <ClCompile Include="GameObjects\Water.cpp" />
     <ClCompile Include="Input\InputDevice.cpp" />
     <ClCompile Include="Input\ThirdPersonPlayer.cpp" />
     <ClCompile Include="Lab5.cpp" />
@@ -557,6 +558,7 @@
     <ClInclude Include="Cameras\Frustrum.h" />
     <ClInclude Include="Cameras\OrthographicCamera.h" />
     <ClInclude Include="Cameras\PerspectiveCamera.h" />
+    <ClInclude Include="GameObjects\Water.h" />
     <ClInclude Include="Lights\DirectionalLightComponent.h" />
     <ClInclude Include="ParticleSystem\ParticleAttractor.h" />
     <ClInclude Include="ParticleSystem\ParticleSystem.h" />
@@ -942,6 +944,7 @@
       <AdditionalIncludeDirectories>D:\Study\Computer Graphics\Lab5\packages\directxtk_uwp.2024.6.5.1\build\native\..\..\include;D:\Study\Computer Graphics\Lab5\Lab5\..\..\include;;Include</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="ShaderProcess\ReflectionShader.cpp" />
     <ClCompile Include="ShaderProcess\Shader.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -1167,13 +1170,16 @@
       <AdditionalIncludeDirectories>D:\Study\Computer Graphics\Lab5\packages\directxtk_uwp.2024.6.5.1\build\native\..\..\include;D:\Study\Computer Graphics\Lab5\Lab5\..\..\include;;Include</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="ShaderProcess\WaterShader.cpp" />
     <ClCompile Include="Utils\Delegates.cpp" />
     <ClCompile Include="Utils\Importer3D.cpp" />
     <None Include="Shaders\MyCascadeShadowmapShader.hlsl" />
     <None Include="Shaders\MyGBufferShader.hlsl" />
     <None Include="Shaders\MyLightingStageShader.hlsl" />
+    <None Include="Shaders\MyReflectionShader.hlsl" />
     <None Include="Shaders\MyShadowmapShader.hlsl" />
     <None Include="Shaders\MyVertexShader.hlsl" />
+    <None Include="Shaders\MyWaterShader.hlsl" />
     <None Include="Shaders\ParticleSystemShaders\MyEmitParticlesShader.hlsl" />
     <None Include="Shaders\ParticleSystemShaders\MyInitIndirectComputeArgsShader.hlsl" />
     <None Include="Shaders\ParticleSystemShaders\MyInitParticlesShader.hlsl" />
@@ -1219,9 +1225,11 @@
     <ClInclude Include="ShaderProcess\LightingStageShader.h" />
     <ClInclude Include="ShaderProcess\MainShader.h" />
     <ClInclude Include="ShaderProcess\PixelShader.h" />
+    <ClInclude Include="ShaderProcess\ReflectionShader.h" />
     <ClInclude Include="ShaderProcess\Shader.h" />
     <ClInclude Include="ShaderProcess\ShadowmapShader.h" />
     <ClInclude Include="ShaderProcess\VertexShader.h" />
+    <ClInclude Include="ShaderProcess\WaterShader.h" />
     <ClInclude Include="Utils\Delegates.h" />
     <ClInclude Include="Utils\Importer3D.h" />
     <ClInclude Include="Utils\Keys.h" />

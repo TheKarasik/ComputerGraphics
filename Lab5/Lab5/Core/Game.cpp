@@ -13,7 +13,7 @@
 #include "Mesh.h"
 #include "MiniMapCamera.h"
 #include "OrthographicCamera.h"
-#include "FileTexture.h"
+#include "..\Render\FileTexture.h"
 //#include "ParticleAttractor.h"
 //#include "ParticleSystem.h"
 #include "ParticleAttractor.h"
@@ -22,17 +22,20 @@
 #include "SpotLightComponent.h"
 #include "ThirdPersonPlayer.h"
 #include "Renderer.h"
+#include "Water.h"
 //#include "DirectionalLightComponent.h"
 
 std::vector<Controllable*> Controllable::changing_objects;
 std::vector<Updatable*> Updatable::changing_objects;
+std::vector<Drawable*> Drawable::visual_objects;
 
 float Updatable::elapsed;
 //std::vector<DirectionalLightComponent*> DirectionalLights_; 
 
 Game::Game()
 {
-    
+    context.ContextFlags = CONTEXT_CONTROL;
+    GetThreadContext(GetCurrentThread(), &context);
     display_ = new Display32(L"Lab 5", 800, 800, input_);
     input_ = new InputDevice(this);
     
@@ -59,13 +62,14 @@ Game::Game()
     directional_light = new DirectionalLightComponent(renderer_);
     directional_light->SetDirection(DirectX::SimpleMath::Vector3(0,-1,0));
     directional_light->SetIntensity(0.3f);
+    //directional_light->SetDirection(DirectX::SimpleMath::Vector3(1,-1,0));
     directional_light->SetColor(DirectX::SimpleMath::Vector4(1,1,1,1));
 
     emmiter_sphere = new EmitterSphere();
     emmiter_sphere->max_spawn = 1000;
-    emmiter_sphere->position = DirectX::SimpleMath::Vector4(0, 2, -5, 1);
-    emmiter_sphere->scale = DirectX::SimpleMath::Vector4(5, 5, 5, 1);
-    emmiter_sphere->partitioning = DirectX::SimpleMath::Vector4(1, 1, 1, 1);
+    emmiter_sphere->position = DirectX::SimpleMath::Vector4(0, 7, -5, 1);
+    emmiter_sphere->scale = DirectX::SimpleMath::Vector4(1, 1, 1, 1);
+    emmiter_sphere->partitioning = DirectX::SimpleMath::Vector4(10, 10, 10, 1);
     emmiter_sphere->rotation = DirectX::SimpleMath::Matrix::CreateRotationX(0) *
             DirectX::SimpleMath::Matrix::CreateRotationY(0) *
             DirectX::SimpleMath::Matrix::CreateRotationZ(0);
@@ -126,8 +130,29 @@ Game::Game()
         body_texture = new FileTexture(renderer_, L"Models/textures/error.jpg");
         imported_meshes[0]->set_texture(body_texture);
         imported_meshes[0]->set_scale(DirectX::XMFLOAT3(50,50,50));
+        imported_meshes[0]->set_location(DirectX::XMFLOAT3(0, 0, 0));
         meshes_.insert(meshes_.end(), imported_meshes.begin(), imported_meshes.end());
         plane = imported_meshes[0];
+        //plane->flip_normals();
+        //plane->add_rotation(DirectX::SimpleMath::Vector3(1,0,0), Pi);
+    }
+
+    //Import water
+    Importer3D importer_3d4 = Importer3D();
+    if (importer_3d4.DoTheImportThing("Models/source/ErrorPlane.fbx"))
+    {
+        std::vector<Mesh*> imported_meshes = importer_3d4.GetMeshes(renderer_);
+        water_texture = new FileTexture(renderer_, L"Models/textures/Water.jpg");
+        imported_meshes[0]->set_normal_texture(water_texture);
+        imported_meshes[0]->set_scale(DirectX::XMFLOAT3(40,40,40));
+        imported_meshes[0]->set_location(DirectX::XMFLOAT3(0, -1, 0));
+        imported_meshes[0]->set_drawability(false);
+        meshes_.insert(meshes_.end(), imported_meshes.begin(), imported_meshes.end());
+        water = new Water(renderer_);
+        water->provide_water_mesh(imported_meshes[0]);
+        water->SetGround(plane);
+        water->Initialize();
+        renderer_->provideWater(water);
         //plane->flip_normals();
         //plane->add_rotation(DirectX::SimpleMath::Vector3(1,0,0), Pi);
     }
@@ -137,8 +162,22 @@ Game::Game()
         m->set_scale(DirectX::SimpleMath::Vector3(10,10,10));
     }*/
 }
+
+DWORD Game::ExceptionFilter(EXCEPTION_POINTERS *pointers, DWORD dwException)
+{
+    return EXCEPTION_EXECUTE_HANDLER;
+}
+
 void Game::GameLoop()
 {
+    /*__try
+    {
+        
+    }
+    __except(ExceptionFilter(GetExceptionInformation(), GetExceptionCode()))
+    {
+        printf("\n****** ExceptionFilter fired ******\n");
+    }*/
     start = std::chrono::steady_clock::now();
     std::chrono::time_point<std::chrono::steady_clock> previous = start;
     lag = 0.0f;

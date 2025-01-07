@@ -13,8 +13,12 @@
 //#pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "assimp-vc143-mtd.lib")
 
+#pragma comment(linker, "/STACK:200000000")
+#pragma comment(linker, "/HEAP:200000000")
+
 #define S_PER_UPDATE 0.016
 
+class Water;
 struct EmitterSphere;
 class ParticleAttractor;
 class ParticleSystem;
@@ -52,8 +56,10 @@ private:
     std::vector<Mesh*> pick_ups;
     Mesh* sphere;
     Mesh* plane;
+    Water* water;
     FileTexture* body_texture;
     FileTexture* whiskers_texture;
+    FileTexture* water_texture;
     PerspectiveCamera* camera_;
     ParticleAttractor* attractor_;
     ParticleSystem* particle_system_;
@@ -68,4 +74,6 @@ private:
     float lag;
     float elapsed;
     MSG msg = {};
+    CONTEXT context;
+    DWORD ExceptionFilter(EXCEPTION_POINTERS *pointers, DWORD dwException);
 };

@@ -9,6 +9,7 @@ PerspectiveCamera::PerspectiveCamera(DirectX::SimpleMath::Vector3 position,
                            DirectX::SimpleMath::Vector3 up_direction) :
     position_(position), focus_position_(focus_position), up_direction_(up_direction)
 {
+    //reflection_position_ = DirectX::SimpleMath::Vector3(position_.x, -position_.y + (), position_.z);
     SetUpMatricies();
     cascade_data_ = new CascadeData();
     //frustrum_ = new Frustrum(this);
@@ -52,7 +53,7 @@ void PerspectiveCamera::update()
 
 void PerspectiveCamera::RotateCamera(const MouseMoveEventArgs& event)
 {
-    if (event.Offset.x != 0)
+    /*if (event.Offset.x != 0)
     {
         DirectX::XMVECTOR up_rotation_quaternion = XMQuaternionRotationAxis
             (DirectX::SimpleMath::Vector3(0,1, 0), event.Offset.x*step_angular);
@@ -62,10 +63,10 @@ void PerspectiveCamera::RotateCamera(const MouseMoveEventArgs& event)
     if (event.Offset.y != 0)
     {
         DirectX::XMVECTOR right_rotation_quaternion = XMQuaternionRotationAxis
-            (right_direction()/**step_linear*/, event.Offset.y*step_angular);
+            (right_direction()/**step_linear#1#, event.Offset.y*step_angular);
         //focus_position_ = XMVector3Rotate(focus_position_, right_rotation_quaternion);   
         up_direction_ = XMVector3Rotate(up_direction_, right_rotation_quaternion);  
-    }
+    }*/
 }
 
 

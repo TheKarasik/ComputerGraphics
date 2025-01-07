@@ -3,7 +3,7 @@
 #include <random>
 #include <set>
 
-#include "FileTexture.h"
+#include "..\Render\FileTexture.h"
 #include "Triangle.h"
 
 Mesh::Mesh(Renderer* renderer, const DirectX::SimpleMath::Matrix& transformation)
@@ -51,11 +51,17 @@ void Mesh::set_meshes(MeshGeometry* mesh_geometries)
     renderer_->device()->CreateBuffer(&vertexBufDesc, &vertexData, &vertexBuffer);
     
     strides = sizeof TriangleVertex;
+
 }
 
 void Mesh::set_texture(FileTexture* texture)
 {
     texture_ = texture;
+}
+
+void Mesh::set_normal_texture(FileTexture* texture)
+{
+    normal_texture_ = texture;
 }
 
 void Mesh::flip_normals()

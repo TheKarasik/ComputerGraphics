@@ -23,6 +23,7 @@ struct GeometryShaderInput
     float3 velocity : TEXCOORD3;
     //uint   orientation : TEXCOORD4;
     float  size : TEXCOORD5;
+    float age : TEXCOORD6;
 };
 
 struct PixelShaderInput
@@ -34,6 +35,7 @@ struct PixelShaderInput
     float3 center : TEXCOORD3;
     float  radius : TEXCOORD4;
     float2 uv : TEXCOORD5;
+    float age : TEXCOORD6;
 };
 
 struct PixelShaderOutput
@@ -62,6 +64,8 @@ GeometryShaderInput VSMain(uint vertexId : SV_VertexID)
     //output.orientation = p.orientation;
     //output.size = p.sizeStart + alpha * (p.sizeEnd - p.sizeStart);
     output.size = p.size + alpha * p.sizeDelta;
+
+    output.age = p.age;
     
     return output;
 }
@@ -102,24 +106,28 @@ void GSMain(point GeometryShaderInput input[1], inout TriangleStream<PixelShader
     output.oPosition = pos + particleSize * (-right + up);
     output.Position = mul(float4(output.oPosition, 1.0), viewProj);
     output.uv = float2(0.0, 0.0);
+    output.age = input[0].age;
     OutStream.Append(output);
 
     // Bottom left vertex
     output.oPosition = pos + particleSize * (-right - up);
     output.Position = mul(float4(output.oPosition, 1.0), viewProj);
     output.uv = float2(0.0, 1.0);
+    output.age = input[0].age;
     OutStream.Append(output);
 
     // Upper right vertex
     output.oPosition = pos + particleSize * (right + up);
     output.Position = mul(float4(output.oPosition, 1.0), viewProj);
     output.uv = float2(1.0, 0.0);
+    output.age = input[0].age;
     OutStream.Append(output);
 
     // Bottom right vertex
     output.oPosition = pos + particleSize * (right - up);
     output.Position = mul(float4(output.oPosition, 1.0), viewProj);
     output.uv = float2(1.0, 1.0);
+    output.age = input[0].age;
     OutStream.Append(output);
 
     OutStream.RestartStrip();
@@ -134,6 +142,7 @@ PixelShaderOutput PSMain(PixelShaderInput input)
 
     float len = length(input.oPosition - input.center);
     output.color.a = output.color.a * (1.0 - smoothstep(0.0, input.radius, len));
+    if (output.color.a < 0.1) output.color.a = 0.0f;
     
     return output;
 

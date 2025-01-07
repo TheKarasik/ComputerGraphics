@@ -29,8 +29,9 @@ class ParticleSystem : public Updatable/*, public Drawable*/
 public:
     ParticleSystem(EmitterSphere& emitter_data, Renderer* renderer);
     void update() override;
+    void Render(ID3D11RenderTargetView* rtv);
     //void draw() override;
-    void draw();
+    void ProcessFrame();
     void set_emitter_data(EmitterSphere* emitter_data) {emitter_data_ = emitter_data;}
     /*void set_simulate_particles_struct_(const SimulateParticlesStruct& simulate_particles_struct)
         {simulate_particles_struct_ = simulate_particles_struct;}*/
@@ -51,6 +52,7 @@ protected:
     //SimulateParticlesStruct simulate_particles_struct_;
     
 private:
+    long namecheck1 = 0xBAADF00D;
     Renderer* renderer_;
     
     UnorderedAccessView<UINT>* UAV_deadlist;
@@ -66,6 +68,7 @@ private:
     ConstantBuffer<InitIndirectComputeArgs1DConstantBuffer>* CB_init_simulate_dispatch_args;
     ConstantBuffer<ParticleSimulationStuff>* CB_simulation;
     ConstantBuffer<CameraMatricies>* CB_camera_matricies;
+    ConstantBuffer<RandomizedParticlesParameters>* CB_randomized_particles_parameters;
     
     ComputeShader* CS_init_particles;
     ComputeShader* CS_emit_particles;
@@ -79,7 +82,13 @@ private:
     ID3D11ShaderResourceView* SRV_particle;
     ID3D11ShaderResourceView* SRV_alive_index[2];
 
+    int blendmode = 1;
+
+    ID3D11BlendState* BS_opaque;
+    ID3D11BlendState* BS_not_premultiplied;
     ID3D11BlendState* BS_additive;
+    ID3D11DepthStencilState* DSS_depth_default;
+    ID3D11DepthStencilState* DSS_depth_read;
     ID3D11DepthStencilState* DSS_none;
     ID3D11RasterizerState* RS_none;
     
@@ -91,4 +100,5 @@ private:
     float emissionRate = 10000.0f;
     float emissionRateAccumulation = 0.0f;
     int current_buffer = 0;
+    long namecheck2 = 0xBAADF00D;
 };
